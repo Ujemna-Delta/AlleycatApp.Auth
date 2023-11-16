@@ -34,7 +34,9 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: code-coverage-report
-        path: ./dotCover.Output.html
+        path: |
+          ./dotCover.Output/
+          ./dotCover.Output.html
 
   publish:
     runs-on: ubuntu-latest
