@@ -6,13 +6,13 @@ namespace AlleycatApp.Auth.Models
     public class Race : ICopyable<Race>
     {
         public int Id { get; set; }
-        [StringLength(64)] public string Name { get; set; } = string.Empty;
+        [Required, StringLength(64)] public string Name { get; set; } = null!;
         [StringLength(256)] public string? Description { get; set; }
-        public DateTime BeginTime { get; set; }
-        [StringLength(256)] public string StartAddress { get; set; } = string.Empty;
+        [Required] public DateTime BeginTime { get; set; }
+        [Required, StringLength(256)] public string StartAddress { get; set; } = null!;
         [Column(TypeName = "decimal(8, 2)")] public decimal? ValueModifier { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsFreeOrder { get; set; }
+        [Required] public bool IsActive { get; set; }
+        [Required] public bool IsFreeOrder { get; set; }
 
         public void CopyTo(Race item)
         {

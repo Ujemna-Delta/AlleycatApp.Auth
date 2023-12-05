@@ -15,10 +15,9 @@ namespace AlleycatApp.Auth.Repositories
         public async Task<Race> AddAsync(Race entity)
         {
             Validate(entity);
-
             var entry = await context.AddAsync(entity);
-            await context.SaveChangesAsync();
 
+            await context.SaveChangesAsync();
             return entry.Entity;
         }
 
@@ -26,6 +25,8 @@ namespace AlleycatApp.Auth.Repositories
         {
             var raceToEdit = await Entities.SingleAsync(r => r.Id == id);
             entity.CopyTo(raceToEdit);
+
+            Validate(raceToEdit);
             await context.SaveChangesAsync();
         }
 
