@@ -12,10 +12,10 @@ namespace AlleycatApp.Auth.Controllers.Api
     public class RacesController(IRaceRepository raceRepository, IMapper mapper) : ControllerBase
     {
         [HttpGet] 
-        public IActionResult GetRaces() => Ok(raceRepository.Entities.ToArray());
+        public IActionResult GetRaces() => Ok(raceRepository.Entities.Select(e => mapper.Map<RaceDto>(e)).ToArray());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRaceById(int id) => Ok(await raceRepository.FindByIdAsync(id));
+        public async Task<IActionResult> GetRaceById(int id) => Ok(mapper.Map<RaceDto>(await raceRepository.FindByIdAsync(id)));
 
         [HttpPost]
         public async Task<IActionResult> AddRace(RaceDto race)
@@ -24,7 +24,7 @@ namespace AlleycatApp.Auth.Controllers.Api
             {
                 var raceModel = mapper.Map<Race>(race);
                 var createdRace = await raceRepository.AddAsync(raceModel);
-                return CreatedAtAction(nameof(AddRace), createdRace);
+                return CreatedAtAction(nameof(AddRace), mapper.Map<RaceDto>(createdRace));
             }
             catch (InvalidModelException e)
             {
