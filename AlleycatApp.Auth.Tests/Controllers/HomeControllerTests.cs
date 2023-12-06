@@ -1,7 +1,7 @@
 ﻿using AlleycatApp.Auth.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlleycatApp.Auth.Tests
+namespace AlleycatApp.Auth.Tests.Controllers
 {
     public class HomeControllerTests
     {
