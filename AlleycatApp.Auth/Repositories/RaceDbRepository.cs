@@ -14,6 +14,7 @@ namespace AlleycatApp.Auth.Repositories
 
         public async Task<Race> AddAsync(Race entity)
         {
+            entity.Id = 0;
             Validate(entity);
             var entry = await context.AddAsync(entity);
 
