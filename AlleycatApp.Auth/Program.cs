@@ -13,8 +13,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 app.MapDefaultControllerRoute();
+
+app.UseCors(options => options.AllowAnyHeader()
+    .AllowAnyMethod()
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials());
 
 app.Run();
