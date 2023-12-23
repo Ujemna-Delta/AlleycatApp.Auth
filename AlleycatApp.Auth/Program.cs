@@ -2,6 +2,8 @@ using System.Text;
 using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Services.Authentication;
+using AlleycatApp.Auth.Services.Authentication.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +22,18 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddAutoMapper(typeof(Program));
 
+// Add infrastructural services
+
+builder.Services.AddScoped<IApplicationConfigurationBuilder, ApplicationConfigurationBuilder>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
 // Add repositories
 
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
-// Add infrastructural services
+// Add services
 
-builder.Services.AddScoped<IApplicationConfigurationBuilder, ApplicationConfigurationBuilder>();
+builder.Services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
 
 var jwtConfig = new ApplicationConfigurationBuilder(builder.Configuration)
     .BuildJwtConfiguration()
@@ -47,14 +54,17 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = jwtConfig?.Audience,
-        ValidIssuer = jwtConfig?.Issuer,
+        ValidAudience = jwtConfig!.Audience,
+        ValidIssuer = jwtConfig.Issuer,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig?.SecretKey!))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey))
     };
 });
 
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapDefaultControllerRoute();
 
