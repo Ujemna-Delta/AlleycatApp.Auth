@@ -7,31 +7,35 @@ namespace AlleycatApp.Auth.Services.Registration
     {
         public async Task<IdentityResult> RegisterAsync(IdentityUser user, string password)
         {
-            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) == null)
+            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
             return await userManager.CreateAsync(user, password);
         }
 
-        public async Task<IdentityResult> UpdateAsync(IdentityUser user)
+        public async Task<IdentityResult> UpdateAsync(string userId, IdentityUser user)
         {
-            var userToEdit = await userManager.FindByIdAsync(user.Id);
+            var userToEdit = await userManager.FindByIdAsync(userId) ?? 
+                             throw new InvalidOperationException("User with the given ID was not found.");
 
-            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) == null)
+            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
             return await userManager.UpdateAsync(mapper.Map(user, userToEdit) ?? throw new InvalidOperationException("Invalid user mapping"));
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(IdentityUser user, string currentPassword, string newPassword)
-            => await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        public async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var userToEdit = await userManager.FindByIdAsync(userId) ??
+                             throw new InvalidOperationException("User with the given ID was not found.");
+
+            return await userManager.ChangePasswordAsync(userToEdit, currentPassword, newPassword);
+        }
 
         public async Task<IdentityResult> DeleteAsync(string userId)
         {
-            var userToDelete = await userManager.FindByIdAsync(userId);
-
-            if(userToDelete == null)
-                return IdentityResult.Failed(new IdentityError { Code = "UserNotFound", Description = $"User with ID {userId} not found" });
+            var userToDelete = await userManager.FindByIdAsync(userId) ??
+                             throw new InvalidOperationException("User with the given ID was not found.");
 
             return await userManager.DeleteAsync(userToDelete);
         }
