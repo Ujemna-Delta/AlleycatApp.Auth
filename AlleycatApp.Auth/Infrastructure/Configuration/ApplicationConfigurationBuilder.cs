@@ -13,6 +13,9 @@ namespace AlleycatApp.Auth.Infrastructure.Configuration
             var expirationTimeMinutes = TryGetValue<int>("Jwt:ExpirationTimeMinutes");
             var secretKey = TryGetStringValue("Jwt:SecretKey");
 
+            if (secretKey.Length < 32)
+                throw new ConfigurationException("Jwt:SecretKey must be at least 32 characters long.", "Jwt:SecretKey");
+
             if (expirationTimeMinutes <= 0)
                 throw new ConfigurationException("Jwt:ExpirationTimeMinutes must be set to at least 1.", "Jwt:ExpirationTimeMinutes");
 

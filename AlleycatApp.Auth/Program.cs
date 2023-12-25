@@ -69,5 +69,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapDefaultControllerRoute();
+app.MapGet("/secret", () => "This is a secret page, you have a valid token.").RequireAuthorization();
 
 app.Run();

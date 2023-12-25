@@ -4,6 +4,16 @@ namespace AlleycatApp.Auth.Services.Authentication.Jwt
 {
     public class JwtSignInResult : SignInResult
     {
-        public string Token { get; init; } = null!;
+        private readonly string _jwtToken = null!;
+
+        public string Token
+        {
+            get => _jwtToken;
+            init
+            {
+                Succeeded = true;
+                _jwtToken = value;
+            }
+        }
     }
 }

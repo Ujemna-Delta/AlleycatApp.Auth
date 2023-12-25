@@ -56,7 +56,6 @@ namespace AlleycatApp.Auth.Controllers.Api.User
             {
                 return NotFound(e.Message);
             }
-
         }
     }
 }
