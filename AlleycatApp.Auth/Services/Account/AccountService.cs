@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 
-namespace AlleycatApp.Auth.Services.Registration
+namespace AlleycatApp.Auth.Services.Account
 {
-    public class RegistrationService(UserManager<IdentityUser> userManager, IMapper mapper) : IRegistrationService
+    public class AccountService(UserManager<IdentityUser> userManager, IMapper mapper) : IAccountService
     {
         public async Task<IdentityResult> RegisterAsync(IdentityUser user, string password)
         {

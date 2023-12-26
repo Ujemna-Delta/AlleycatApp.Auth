@@ -7,7 +7,9 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
     {
         public UserProfile()
         {
-            CreateMap<IdentityUser, IdentityUser>().ForMember(x => x.Id, opt => opt.Ignore());
+            CreateMap<IdentityUser, IdentityUser>()
+                .ForMember(x => x.Id, opt => opt.Ignore())
+                .ForMember(x => x.PasswordHash, opt => opt.Ignore());
         }
     }
 }

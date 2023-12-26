@@ -16,7 +16,7 @@ namespace AlleycatApp.Auth.Services.Authentication.Jwt
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
-                new Claim("UserId", user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

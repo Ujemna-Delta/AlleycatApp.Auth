@@ -1,27 +1,30 @@
 ﻿using AlleycatApp.Auth.Models.Dto;
-using AlleycatApp.Auth.Services.Registration;
+using AlleycatApp.Auth.Services.Account;
+using AlleycatApp.Auth.Services.Providers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlleycatApp.Auth.Controllers.Api.User
 {
     [Route("api/users/[controller]")]
-    [ApiController]
-    public class AccountController(IRegistrationService registrationService) : ControllerBase
+    [ApiController, Authorize]
+    public class AccountController(IAccountService accountService, IUserDataProvider userDataProvider) : ControllerBase
     {
-        [HttpPost]
+        [HttpPost, AllowAnonymous]
         public async Task<IActionResult> Register(UserDto userDto)
         {
-            var result = await registrationService.RegisterAsync(new IdentityUser { UserName = userDto.UserName }, userDto.Password);
+            var result = await accountService.RegisterAsync(new IdentityUser { UserName = userDto.UserName }, userDto.Password);
             return result.Succeeded ? Created() : BadRequest(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, UserDto userDto)
+        [HttpPut]
+        public async Task<IActionResult> Update(UserDto userDto)
         {
             try
             {
-                var result = await registrationService.UpdateAsync(id, new IdentityUser { UserName = userDto.UserName });
+                var id = userDataProvider.GetUserIdForClaimsPrincipal(User);
+                var result = await accountService.UpdateAsync(id ?? string.Empty, new IdentityUser { UserName = userDto.UserName });
                 return result.Succeeded ? NoContent() : BadRequest(result);
             }
             catch (InvalidOperationException e)
@@ -30,12 +33,13 @@ namespace AlleycatApp.Auth.Controllers.Api.User
             }
         }
 
-        [HttpPut("password/{id}")]
-        public async Task<IActionResult> ChangePassword(string id, string currentPassword, string newPassword)
+        [HttpPut("password")]
+        public async Task<IActionResult> ChangePassword(PasswordChangeDto passwordChangeDto)
         {
             try
             {
-                var result = await registrationService.ChangePasswordAsync(id, currentPassword, newPassword);
+                var id = userDataProvider.GetUserIdForClaimsPrincipal(User);
+                var result = await accountService.ChangePasswordAsync(id ?? string.Empty, passwordChangeDto.CurrentPassword, passwordChangeDto.NewPassword);
                 return result.Succeeded ? NoContent() : BadRequest(result);
             }
             catch (InvalidOperationException e)
@@ -44,12 +48,13 @@ namespace AlleycatApp.Auth.Controllers.Api.User
             }
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(string id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete()
         {
             try
             {
-                var result = await registrationService.DeleteAsync(id);
+                var id = userDataProvider.GetUserIdForClaimsPrincipal(User);
+                var result = await accountService.DeleteAsync(id ?? string.Empty);
                 return result.Succeeded ? NoContent() : BadRequest(result);
             }
             catch (InvalidOperationException e)

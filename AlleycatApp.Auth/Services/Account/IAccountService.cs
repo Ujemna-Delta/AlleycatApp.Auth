@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace AlleycatApp.Auth.Services.Registration
+namespace AlleycatApp.Auth.Services.Account
 {
-    public interface IRegistrationService
+    public interface IAccountService
     {
         Task<IdentityResult> RegisterAsync(IdentityUser user, string password);
         Task<IdentityResult> UpdateAsync(string userId, IdentityUser user);

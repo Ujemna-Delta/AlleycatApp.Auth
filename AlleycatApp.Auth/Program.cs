@@ -4,7 +4,8 @@ using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Repositories;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
-using AlleycatApp.Auth.Services.Registration;
+using AlleycatApp.Auth.Services.Account;
+using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,10 +33,14 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
+// Add providers
+
+builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
+
 // Add services
 
 builder.Services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
-builder.Services.AddScoped<IRegistrationService, RegistrationService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 var jwtConfig = new ApplicationConfigurationBuilder(builder.Configuration)
     .BuildJwtConfiguration()
