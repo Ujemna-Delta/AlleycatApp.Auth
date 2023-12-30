@@ -23,6 +23,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddCors();
 
 // Add infrastructural services
 
@@ -75,5 +76,10 @@ app.UseAuthorization();
 
 app.MapDefaultControllerRoute();
 app.MapGet("/secret", () => "This is a secret page, you have a valid token.").RequireAuthorization();
+
+app.UseCors(options => options.AllowAnyHeader()
+    .AllowAnyMethod()
+    .SetIsOriginAllowed(_ => true)
+    .AllowCredentials());
 
 app.Run();
