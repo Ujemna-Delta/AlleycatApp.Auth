@@ -1,6 +1,7 @@
 using System.Text;
 using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure.Configuration;
+using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
@@ -18,12 +19,30 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddCors();
+
+// Add identity
+
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Manager>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Pointer>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Attendee>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add infrastructural services
 
@@ -70,6 +89,15 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+    if(context.Database.GetPendingMigrations().Any())
+        context.Database.Migrate();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
