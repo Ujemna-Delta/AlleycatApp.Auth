@@ -55,6 +55,7 @@ builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
 // Add providers
 
+builder.Services.AddScoped<IUserServicesProvider, UserServicesProvider>();
 builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
 
 // Add services
