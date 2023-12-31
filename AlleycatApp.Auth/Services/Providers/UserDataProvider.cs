@@ -17,5 +17,16 @@ namespace AlleycatApp.Auth.Services.Providers
             Attendee => Constants.RoleNames.Attendee,
             _ => null
         };
+
+        public async Task<IEnumerable<string>> GetRolesForClaimsPrincipalAsync(ClaimsPrincipal principal)
+        {
+            var mgr = userServicesProvider.DefaultManager;
+            var user = await mgr.FindByIdAsync(GetUserIdForClaimsPrincipal(principal) ?? string.Empty);
+
+            if (user == null)
+                return new List<string>();
+
+            return await mgr.GetRolesAsync(user);
+        }
     }
 }

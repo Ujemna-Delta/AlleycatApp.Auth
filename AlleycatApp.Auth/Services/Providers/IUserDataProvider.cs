@@ -7,5 +7,6 @@ namespace AlleycatApp.Auth.Services.Providers
     {
         string? GetUserIdForClaimsPrincipal(ClaimsPrincipal principal);
         string? GetRoleName<TUser>() where TUser : IdentityUser, new();
+        Task<IEnumerable<string>> GetRolesForClaimsPrincipalAsync(ClaimsPrincipal principal);
     }
 }

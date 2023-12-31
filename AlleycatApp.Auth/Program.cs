@@ -1,5 +1,6 @@
 using System.Text;
 using AlleycatApp.Auth.Data;
+using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories;
@@ -63,10 +64,10 @@ builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
 builder.Services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
-var jwtConfig = new ApplicationConfigurationBuilder(builder.Configuration)
+var appConfig = new ApplicationConfigurationBuilder(builder.Configuration)
     .BuildJwtConfiguration()
-    .Build()
-    .JwtConfiguration;
+    .BuildInitialManagerCredentials()
+    .Build();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -82,10 +83,10 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = jwtConfig!.Audience,
-        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = appConfig.JwtConfiguration!.Audience,
+        ValidIssuer = appConfig.JwtConfiguration.Issuer,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appConfig.JwtConfiguration.SecretKey))
     };
 });
 
@@ -95,9 +96,14 @@ using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
     var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var accountService = serviceProvider.GetRequiredService<IAccountService>();
 
     if(context.Database.GetPendingMigrations().Any())
         context.Database.Migrate();
+
+    await DataFactory.EnsureRolesAsync(roleManager);
+    await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
 }
 
 app.UseAuthentication();
