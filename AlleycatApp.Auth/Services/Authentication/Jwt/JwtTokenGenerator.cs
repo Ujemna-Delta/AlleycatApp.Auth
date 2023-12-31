@@ -8,7 +8,7 @@ namespace AlleycatApp.Auth.Services.Authentication.Jwt
 {
     public class JwtTokenGenerator(IApplicationConfigurationBuilder appConfigBuilder) : IJwtTokenGenerator
     {
-        public string GenerateToken(IEnumerable<Claim> claims)
+        public SecurityToken GenerateToken(IEnumerable<Claim> claims)
         {
             var jwtConfig = appConfigBuilder.BuildJwtConfiguration().Build().JwtConfiguration;
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig!.SecretKey));
@@ -23,8 +23,9 @@ namespace AlleycatApp.Auth.Services.Authentication.Jwt
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return tokenHandler.CreateToken(tokenDescriptor);
         }
+
+        public string SerializeToken(SecurityToken token) => new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

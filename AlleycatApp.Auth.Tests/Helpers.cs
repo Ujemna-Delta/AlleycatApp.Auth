@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.ComponentModel.DataAnnotations;
 using AlleycatApp.Auth.Infrastructure.Exceptions;
+using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Identity;
 
 namespace AlleycatApp.Auth.Tests
