@@ -1,4 +1,6 @@
-﻿using AlleycatApp.Auth.Controllers;
+﻿using System.Security.Claims;
+using AlleycatApp.Auth.Controllers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlleycatApp.Auth.Tests.Controllers
@@ -6,15 +8,16 @@ namespace AlleycatApp.Auth.Tests.Controllers
     public class HomeControllerTests
     {
         [Fact]
-        public void DoesReturnHelloWorld()
+        public async Task DoesReturnHelloWorld()
         {
             // Arrange
 
-            var controller = new HomeController();
+            var controllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = new ClaimsPrincipal() } };
+            var controller = new HomeController(null!) { ControllerContext = controllerContext };
 
             // Act
 
-            var result = controller.Index() as OkObjectResult;
+            var result = await controller.Index() as OkObjectResult;
 
             // Assert
 
