@@ -1,4 +1,4 @@
-﻿using AlleycatApp.Auth.Models.Dto;
+﻿using AlleycatApp.Auth.Models.Dto.User;
 using AlleycatApp.Auth.Services.Account;
 using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +12,9 @@ namespace AlleycatApp.Auth.Controllers.Api.User
     public class AccountController(IAccountService accountService, IUserDataProvider userDataProvider) : ControllerBase
     {
         [HttpPost, AllowAnonymous]
-        public async Task<IActionResult> Register(UserDto userDto)
+        public async Task<IActionResult> Register(UserRegistrationDto<UserDto> userRegistrationDto)
         {
-            var result = await accountService.RegisterAsync(new IdentityUser { UserName = userDto.UserName }, userDto.Password);
+            var result = await accountService.RegisterAsync(new IdentityUser { UserName = userRegistrationDto.User.UserName }, userRegistrationDto.Password);
             return result.Succeeded ? Created() : BadRequest(result);
         }
 
