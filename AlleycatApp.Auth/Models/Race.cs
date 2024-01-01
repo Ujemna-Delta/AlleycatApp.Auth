@@ -13,5 +13,8 @@ namespace AlleycatApp.Auth.Models
         [Column(TypeName = "decimal(8, 2)")] public decimal? ValueModifier { get; set; }
         [Required] public bool IsActive { get; set; }
         [Required] public bool IsFreeOrder { get; set; }
+
+        public short? LeagueId { get; set; }
+        public League? League { get; set; }
     }
 }

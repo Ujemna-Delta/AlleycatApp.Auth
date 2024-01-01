@@ -32,7 +32,7 @@ namespace AlleycatApp.Auth.Controllers.Api
             }
             catch (InvalidModelException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ModelError);
             }
         }
 
@@ -47,7 +47,7 @@ namespace AlleycatApp.Auth.Controllers.Api
             }
             catch (InvalidModelException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.ModelError);
             }
             catch (InvalidOperationException)
             {
