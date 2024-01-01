@@ -87,7 +87,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
             // Act
 
             var result1 = await controller.GetRaceById(2) as OkObjectResult;
-            var result2 = await controller.GetRaceById(10) as OkObjectResult;
+            var result2 = await controller.GetRaceById(10) as NotFoundResult;
 
             // Assert
 
@@ -95,10 +95,9 @@ namespace AlleycatApp.Auth.Tests.Controllers
             Assert.NotNull(result2);
 
             Assert.Equal(200, result1.StatusCode);
-            Assert.Equal(200, result2.StatusCode);
+            Assert.Equal(404, result2.StatusCode);
 
             Assert.Equal(raceDto, result1.Value);
-            Assert.Null(result2.Value);
         }
 
         [Fact]
