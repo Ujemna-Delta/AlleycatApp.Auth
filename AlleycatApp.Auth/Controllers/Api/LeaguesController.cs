@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlleycatApp.Auth.Controllers.Api.User
+namespace AlleycatApp.Auth.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]

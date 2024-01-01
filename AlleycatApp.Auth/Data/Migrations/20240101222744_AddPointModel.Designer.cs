@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlleycatApp.Auth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240101222744_AddPointModel")]
+    partial class AddPointModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -390,11 +393,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.Property<int?>("PointId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("PointId");
-
                     b.HasDiscriminator().HasValue("Pointer");
                 });
 
@@ -465,15 +463,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.Users.Pointer", b =>
-                {
-                    b.HasOne("AlleycatApp.Auth.Models.Point", "Point")
-                        .WithMany()
-                        .HasForeignKey("PointId");
-
-                    b.Navigation("Point");
                 });
 #pragma warning restore 612, 618
         }
