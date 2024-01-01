@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlleycatApp.Auth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240101203504_AddLeagueModel")]
+    partial class AddLeagueModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,9 +68,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                     b.Property<bool>("IsFreeOrder")
                         .HasColumnType("bit");
 
-                    b.Property<short?>("LeagueId")
-                        .HasColumnType("smallint");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -82,8 +82,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                         .HasColumnType("decimal(8, 2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LeagueId");
 
                     b.ToTable("Races");
                 });
@@ -351,15 +349,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                         .HasColumnType("nvarchar(128)");
 
                     b.HasDiscriminator().HasValue("Pointer");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.Race", b =>
-                {
-                    b.HasOne("AlleycatApp.Auth.Models.League", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueId");
-
-                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

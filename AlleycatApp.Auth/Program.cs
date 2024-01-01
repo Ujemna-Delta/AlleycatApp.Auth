@@ -3,7 +3,6 @@ using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Models.Users;
-using AlleycatApp.Auth.Repositories;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
 using AlleycatApp.Auth.Services.Account;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using AlleycatApp.Auth.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +52,7 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // Add repositories
 
+builder.Services.AddScoped<ILeagueRepository, LeagueDbRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
 // Add providers

@@ -4,31 +4,32 @@ using AlleycatApp.Auth.Models.Dto;
 using AlleycatApp.Auth.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace AlleycatApp.Auth.Controllers.Api
+namespace AlleycatApp.Auth.Controllers.Api.User
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RacesController(IRaceRepository raceRepository, IMapper mapper) : ControllerBase
+    public class LeaguesController(ILeagueRepository repository, IMapper mapper) : ControllerBase
     {
-        [HttpGet] 
-        public IActionResult GetRaces() => Ok(raceRepository.Entities.Select(e => mapper.Map<RaceDto>(e)).ToArray());
+        [HttpGet]
+        public async Task<IActionResult> GetLeagues() =>
+            Ok(await repository.Entities.Select(l => mapper.Map<LeagueDto>(l)).ToArrayAsync());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRaceById(int id)
+        public async Task<IActionResult> GetLeagueById(short id)
         {
-            var race = await raceRepository.FindByIdAsync(id);
-            return race != null ? Ok(mapper.Map<RaceDto>(race)) : NotFound();
+            var league = await repository.FindByIdAsync(id);
+            return league != null ? Ok(mapper.Map<LeagueDto>(league)) : NotFound();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddRace(RaceDto race)
+        public async Task<IActionResult> AddLeague(LeagueDto leagueDto)
         {
             try
             {
-                var raceModel = mapper.Map<Race>(race);
-                var createdRace = await raceRepository.AddAsync(raceModel);
-                return CreatedAtAction(nameof(AddRace), mapper.Map<RaceDto>(createdRace));
+                var result = await repository.AddAsync(mapper.Map<League>(leagueDto));
+                return CreatedAtAction(nameof(AddLeague), mapper.Map<LeagueDto>(result));
             }
             catch (InvalidModelException e)
             {
@@ -37,12 +38,11 @@ namespace AlleycatApp.Auth.Controllers.Api
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRace(int id, RaceDto race)
+        public async Task<IActionResult> UpdateLeague(short id, LeagueDto leagueDto)
         {
             try
             {
-                var raceModel = mapper.Map<Race>(race);
-                await raceRepository.UpdateAsync(id, raceModel);
+                await repository.UpdateAsync(id, mapper.Map<League>(leagueDto));
                 return NoContent();
             }
             catch (InvalidModelException e)
@@ -56,11 +56,11 @@ namespace AlleycatApp.Auth.Controllers.Api
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRace(int id)
+        public async Task<IActionResult> DeleteLeague(short id)
         {
             try
             {
-                await raceRepository.DeleteAsync(id);
+                await repository.DeleteAsync(id);
                 return NoContent();
             }
             catch (InvalidOperationException)

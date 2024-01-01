@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlleycatApp.Auth.Models
 {
-    public class Race : ICopyable<Race>
+    public class Race : IModel<int>
     {
         public int Id { get; set; }
         [Required, StringLength(64)] public string Name { get; set; } = null!;
@@ -14,15 +14,7 @@ namespace AlleycatApp.Auth.Models
         [Required] public bool IsActive { get; set; }
         [Required] public bool IsFreeOrder { get; set; }
 
-        public void CopyTo(Race item)
-        {
-            item.Name = Name;
-            item.Description = Description;
-            item.BeginTime = BeginTime;
-            item.StartAddress = StartAddress;
-            item.ValueModifier = ValueModifier;
-            item.IsActive = IsActive;
-            item.IsFreeOrder = IsFreeOrder;
-        }
+        public short? LeagueId { get; set; }
+        public League? League { get; set; }
     }
 }

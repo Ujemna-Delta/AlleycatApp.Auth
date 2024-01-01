@@ -11,6 +11,7 @@ namespace AlleycatApp.Auth.Data
         public virtual DbSet<Pointer> Pointers => Set<Pointer>();
         public virtual DbSet<Attendee> Attendees => Set<Attendee>();
 
+        public virtual DbSet<League> Leagues => Set<League>();
         public virtual DbSet<Race> Races => Set<Race>();
     }
 }

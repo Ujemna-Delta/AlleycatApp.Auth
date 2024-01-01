@@ -1,12 +1,12 @@
 ﻿using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Models;
-using AlleycatApp.Auth.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System.ComponentModel.DataAnnotations;
 using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Identity;
+using AlleycatApp.Auth.Repositories;
 
 namespace AlleycatApp.Auth.Tests
 {
@@ -39,7 +39,13 @@ namespace AlleycatApp.Auth.Tests
                 if (!Validator.TryValidateObject(race, context, null, true))
                     throw new InvalidModelException("", null!);
 
-                race.CopyTo(raceToUpdate);
+                raceToUpdate.BeginTime = race.BeginTime;
+                raceToUpdate.Description = race.Description;
+                raceToUpdate.IsActive = race.IsActive;
+                raceToUpdate.Name = race.Name;
+                raceToUpdate.IsFreeOrder = race.IsFreeOrder;
+                raceToUpdate.StartAddress = race.StartAddress;
+                raceToUpdate.ValueModifier = race.ValueModifier;
 
             });
             mock.Setup(r => r.DeleteAsync(It.IsAny<int>()))

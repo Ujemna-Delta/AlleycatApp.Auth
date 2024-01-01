@@ -10,5 +10,6 @@
         public decimal? ValueModifier { get; set; }
         public bool IsActive { get; set; }
         public bool IsFreeOrder { get; set; }
+        public short? LeagueId { get; set; }
     }
 }

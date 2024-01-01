@@ -1,6 +1,8 @@
 ﻿using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Repositories;
+using AutoMapper;
+using Moq;
 
 namespace AlleycatApp.Auth.Tests.Repositories
 {
@@ -34,7 +36,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
             };
 
             var context = Helpers.CreateInMemoryContext("CanQueryRaces_Db");
-            var repository = new RaceDbRepository(context);
+            var repository = new RaceDbRepository(context, null!);
 
             context.Races.AddRange(races);
             context.SaveChanges();
@@ -77,7 +79,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
             };
 
             var context = Helpers.CreateInMemoryContext("CanFindRaceById_Db");
-            var repository = new RaceDbRepository(context);
+            var repository = new RaceDbRepository(context, null!);
 
             context.Races.AddRange(races);
             await context.SaveChangesAsync();
@@ -110,7 +112,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
             };
 
             var context = Helpers.CreateInMemoryContext("CanAddRace_Db");
-            var repository = new RaceDbRepository(context);
+            var repository = new RaceDbRepository(context, null!);
 
             context.Races.Add(new Race
             {
@@ -152,7 +154,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
             };
 
             var context = Helpers.CreateInMemoryContext("CannotAddInvalidRace_Db");
-            var repository = new RaceDbRepository(context);
+            var repository = new RaceDbRepository(context, null!);
 
             // Assert
 
@@ -188,15 +190,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
                 },
             };
 
-            var context = Helpers.CreateInMemoryContext("CanUpdateRace_Db");
-            var repository = new RaceDbRepository(context);
-
-            context.Races.AddRange(races);
-            await context.SaveChangesAsync();
-
-            // Act
-
-            await repository.UpdateAsync(2, new Race
+            var updatedRace = new Race
             {
                 Id = 2,
                 Name = "Updated Race 2",
@@ -204,18 +198,35 @@ namespace AlleycatApp.Auth.Tests.Repositories
                 IsActive = true,
                 IsFreeOrder = false,
                 StartAddress = "Sample address"
-            });
+            };
+
+            var mapperMock = new Mock<IMapper>();
+            mapperMock.Setup(m => m.Map(It.IsAny<Race>(), It.IsAny<Race>())).Returns(updatedRace)
+                .Callback((Race _, Race _) =>
+                {
+                    races[1].Name = updatedRace.Name;
+                    races[1].BeginTime = updatedRace.BeginTime;
+                    races[1].IsActive = updatedRace.IsActive;
+                    races[1].Description = updatedRace.Description;
+                    races[1].IsFreeOrder = updatedRace.IsFreeOrder;
+                    races[1].StartAddress = updatedRace.StartAddress;
+                    races[1].ValueModifier = updatedRace.ValueModifier;
+                });
+
+            var context = Helpers.CreateInMemoryContext("CanUpdateRace_Db");
+            var repository = new RaceDbRepository(context, mapperMock.Object);
+
+            context.Races.AddRange(races);
+            await context.SaveChangesAsync();
+
+            // Act
+
+            await repository.UpdateAsync(2, updatedRace);
 
             // Assert
 
             Assert.Equal(2, context.Races.Count());
-            Assert.Equal("Updated Race 2", context.Races.Single(r => r.Id == 2).Name);
-            Assert.Equal(races[1].Id, context.Races.Single(r => r.Id == 2).Id);
-            Assert.Equal(races[1].Description, context.Races.Single(r => r.Id == 2).Description);
-            Assert.Equal(races[1].StartAddress, context.Races.Single(r => r.Id == 2).StartAddress);
-            Assert.Equal(races[1].BeginTime, context.Races.Single(r => r.Id == 2).BeginTime);
-            Assert.Equal(races[1].IsActive, context.Races.Single(r => r.Id == 2).IsActive);
-            Assert.Equal(races[1].IsFreeOrder, context.Races.Single(r => r.Id == 2).IsFreeOrder);
+            Assert.Equivalent(races[1], updatedRace);
 
             await Assert.ThrowsAsync<InvalidModelException>(async () => await repository.UpdateAsync(2, new Race()));
             await Assert.ThrowsAsync<InvalidOperationException>(
@@ -250,7 +261,7 @@ namespace AlleycatApp.Auth.Tests.Repositories
             };
 
             var context = Helpers.CreateInMemoryContext("CanDeleteRaces_Db");
-            var repository = new RaceDbRepository(context);
+            var repository = new RaceDbRepository(context, null!);
 
             context.Races.AddRange(races);
             await context.SaveChangesAsync();
