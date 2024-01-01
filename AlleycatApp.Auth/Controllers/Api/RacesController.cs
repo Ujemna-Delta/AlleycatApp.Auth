@@ -15,7 +15,11 @@ namespace AlleycatApp.Auth.Controllers.Api
         public IActionResult GetRaces() => Ok(raceRepository.Entities.Select(e => mapper.Map<RaceDto>(e)).ToArray());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRaceById(int id) => Ok(mapper.Map<RaceDto>(await raceRepository.FindByIdAsync(id)));
+        public async Task<IActionResult> GetRaceById(int id)
+        {
+            var race = await raceRepository.FindByIdAsync(id);
+            return race != null ? Ok(mapper.Map<RaceDto>(race)) : NotFound();
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddRace(RaceDto race)
