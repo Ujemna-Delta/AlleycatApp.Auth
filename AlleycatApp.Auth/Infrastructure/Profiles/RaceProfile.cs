@@ -9,7 +9,8 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
         public RaceProfile()
         {
             CreateMap<Race, RaceDto>();
-            CreateMap<RaceDto, Race>();
+            CreateMap<RaceDto, Race>().ForMember(r => r.Id, opt => opt.Ignore());
+            CreateMap<Race, Race>().ForMember(r => r.Id, opt => opt.Ignore());
         }
     }
 }
