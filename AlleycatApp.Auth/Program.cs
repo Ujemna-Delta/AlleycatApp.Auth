@@ -54,6 +54,7 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 builder.Services.AddScoped<ILeagueRepository, LeagueDbRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
+builder.Services.AddScoped<IPointRepository, PointDbRepository>();
 
 // Add providers
 
