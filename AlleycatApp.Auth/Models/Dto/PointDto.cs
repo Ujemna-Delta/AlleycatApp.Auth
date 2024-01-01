@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AlleycatApp.Auth.Models.Dto
+﻿namespace AlleycatApp.Auth.Models.Dto
 {
     public class PointDto
     {
