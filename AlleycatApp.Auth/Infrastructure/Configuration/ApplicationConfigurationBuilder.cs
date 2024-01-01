@@ -23,6 +23,17 @@ namespace AlleycatApp.Auth.Infrastructure.Configuration
             return this;
         }
 
+        public IApplicationConfigurationBuilder BuildInitialManagerCredentials()
+        {
+            var userName = TryGetStringValue("InitialManagerUserName");
+            var password = TryGetStringValue("InitialManagerPassword");
+
+            _appConfig.InitialManagerUserName = userName;
+            _appConfig.InitialManagerPassword = password;
+
+            return this;
+        }
+
         public ApplicationConfiguration Build() => _appConfig;
 
         private T TryGetValue<T>(string key) => configuration.GetValue<T>(key) ??

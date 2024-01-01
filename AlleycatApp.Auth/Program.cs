@@ -1,6 +1,8 @@
 using System.Text;
 using AlleycatApp.Auth.Data;
+using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
+using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
@@ -18,12 +20,30 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddDefaultTokenProviders()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddCors();
+
+// Add identity
+
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Manager>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Pointer>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddIdentityCore<Attendee>()
+    .AddDefaultTokenProviders()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add infrastructural services
 
@@ -36,6 +56,7 @@ builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 
 // Add providers
 
+builder.Services.AddScoped<IUserServicesProvider, UserServicesProvider>();
 builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
 
 // Add services
@@ -43,10 +64,10 @@ builder.Services.AddScoped<IUserDataProvider, UserDataProvider>();
 builder.Services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
-var jwtConfig = new ApplicationConfigurationBuilder(builder.Configuration)
+var appConfig = new ApplicationConfigurationBuilder(builder.Configuration)
     .BuildJwtConfiguration()
-    .Build()
-    .JwtConfiguration;
+    .BuildInitialManagerCredentials()
+    .Build();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -62,14 +83,28 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidAudience = jwtConfig!.Audience,
-        ValidIssuer = jwtConfig.Issuer,
+        ValidAudience = appConfig.JwtConfiguration!.Audience,
+        ValidIssuer = appConfig.JwtConfiguration.Issuer,
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.SecretKey))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appConfig.JwtConfiguration.SecretKey))
     };
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var accountService = serviceProvider.GetRequiredService<IAccountService>();
+
+    if(context.Database.GetPendingMigrations().Any())
+        context.Database.Migrate();
+
+    await DataFactory.EnsureRolesAsync(roleManager);
+    await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

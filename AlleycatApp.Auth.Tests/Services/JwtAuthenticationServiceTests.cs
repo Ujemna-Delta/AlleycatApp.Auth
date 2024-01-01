@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
+using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 
 namespace AlleycatApp.Auth.Tests.Services
@@ -20,11 +22,16 @@ namespace AlleycatApp.Auth.Tests.Services
             var userManagerMock = Helpers.GetUserManagerMock(users);
             userManagerMock.Setup(m => m.CheckPasswordAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
                 .ReturnsAsync((IdentityUser _, string password) => password == "validPassword");
+            userManagerMock.Setup(m => m.GetRolesAsync(It.IsAny<IdentityUser>()))
+                .ReturnsAsync((IdentityUser _) => new List<string> { "Role" });
+
+            var providerMock = new Mock<IUserServicesProvider>();
+            providerMock.SetupGet(p => p.DefaultManager).Returns(userManagerMock.Object);
 
             var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
-            tokenGeneratorMock.Setup(g => g.GenerateToken(It.IsAny<IEnumerable<Claim>>())).Returns("token");
+            tokenGeneratorMock.Setup(g => g.SerializeToken(It.IsAny<SecurityToken>())).Returns("token");
 
-            var service = new JwtAuthenticationService(userManagerMock.Object, tokenGeneratorMock.Object);
+            var service = new JwtAuthenticationService(providerMock.Object, tokenGeneratorMock.Object);
 
             // Act
 
@@ -51,9 +58,12 @@ namespace AlleycatApp.Auth.Tests.Services
             userManagerMock.Setup(m => m.CheckPasswordAsync(It.IsAny<IdentityUser>(), It.IsAny<string>()))
                 .ReturnsAsync((IdentityUser _, string password) => password == "validPassword");
 
+            var providerMock = new Mock<IUserServicesProvider>();
+            providerMock.SetupGet(p => p.DefaultManager).Returns(userManagerMock.Object);
+
             var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
 
-            var service = new JwtAuthenticationService(userManagerMock.Object, tokenGeneratorMock.Object);
+            var service = new JwtAuthenticationService(providerMock.Object, tokenGeneratorMock.Object);
 
             // Act
 
@@ -75,7 +85,11 @@ namespace AlleycatApp.Auth.Tests.Services
             var users = new List<IdentityUser>();
             var userManagerMock = Helpers.GetUserManagerMock(users);
             var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
-            var service = new JwtAuthenticationService(userManagerMock.Object, tokenGeneratorMock.Object);
+
+            var providerMock = new Mock<IUserServicesProvider>();
+            providerMock.SetupGet(p => p.DefaultManager).Returns(userManagerMock.Object);
+
+            var service = new JwtAuthenticationService(providerMock.Object, tokenGeneratorMock.Object);
 
             // Act
 

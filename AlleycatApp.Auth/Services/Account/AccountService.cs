@@ -1,43 +1,59 @@
-﻿using AutoMapper;
+﻿using AlleycatApp.Auth.Models.Validation;
+using AlleycatApp.Auth.Services.Providers;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 
 namespace AlleycatApp.Auth.Services.Account
 {
-    public class AccountService(UserManager<IdentityUser> userManager, IMapper mapper) : IAccountService
+    public class AccountService(IUserServicesProvider userServicesProvider, IUserDataProvider userDataProvider, IMapper mapper) : IAccountService
     {
-        public async Task<IdentityResult> RegisterAsync(IdentityUser user, string password)
+        public async Task<IdentityResult> RegisterAsync<TUser>(TUser user, string password) where TUser : IdentityUser, new()
         {
-            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
+            ModelValidator.Validate(user);
+            var mgr = userServicesProvider.ProvideManager<TUser>();
+
+            if (await userServicesProvider.DefaultManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
-            return await userManager.CreateAsync(user, password);
+            var result = await mgr.CreateAsync(user, password);
+
+            var roleName = userDataProvider.GetRoleName<TUser>();
+            if (roleName != null && result.Succeeded)
+                result = await mgr.AddToRoleAsync(user, roleName);
+
+            return result;
         }
 
-        public async Task<IdentityResult> UpdateAsync(string userId, IdentityUser user)
+        public async Task<IdentityResult> UpdateAsync<TUser>(string userId, TUser user) where TUser : IdentityUser, new()
         {
-            var userToEdit = await userManager.FindByIdAsync(userId) ?? 
+            ModelValidator.Validate(user);
+            var mgr = userServicesProvider.ProvideManager<TUser>();
+            var userToEdit = await mgr.FindByIdAsync(userId) ?? 
                              throw new InvalidOperationException("User with the given ID was not found.");
 
-            if (await userManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
+            var existingUser = await userServicesProvider.DefaultManager.FindByNameAsync(user.UserName ?? string.Empty);
+            if (existingUser != null && existingUser != userToEdit)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
-            return await userManager.UpdateAsync(mapper.Map(user, userToEdit) ?? throw new InvalidOperationException("Invalid user mapping"));
+            return await mgr.UpdateAsync(mapper.Map(user, userToEdit) ?? throw new InvalidOperationException("Invalid user mapping"));
         }
 
         public async Task<IdentityResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
-            var userToEdit = await userManager.FindByIdAsync(userId) ??
+            var mgr = userServicesProvider.DefaultManager;
+            var userToEdit = await mgr.FindByIdAsync(userId) ??
                              throw new InvalidOperationException("User with the given ID was not found.");
 
-            return await userManager.ChangePasswordAsync(userToEdit, currentPassword, newPassword);
+            return await mgr.ChangePasswordAsync(userToEdit, currentPassword, newPassword);
         }
 
         public async Task<IdentityResult> DeleteAsync(string userId)
         {
-            var userToDelete = await userManager.FindByIdAsync(userId) ??
+            var mgr = userServicesProvider.DefaultManager;
+            var userToDelete = await mgr.FindByIdAsync(userId) ??
                              throw new InvalidOperationException("User with the given ID was not found.");
 
-            return await userManager.DeleteAsync(userToDelete);
+            return await mgr.DeleteAsync(userToDelete);
         }
     }
 }

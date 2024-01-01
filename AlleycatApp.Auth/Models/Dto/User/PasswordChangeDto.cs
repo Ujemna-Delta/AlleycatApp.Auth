@@ -1,4 +1,4 @@
-﻿namespace AlleycatApp.Auth.Models.Dto
+﻿namespace AlleycatApp.Auth.Models.Dto.User
 {
     public class PasswordChangeDto
     {
