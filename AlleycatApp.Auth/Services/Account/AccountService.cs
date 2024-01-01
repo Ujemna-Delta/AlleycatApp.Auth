@@ -1,4 +1,5 @@
-﻿using AlleycatApp.Auth.Services.Providers;
+﻿using AlleycatApp.Auth.Models.Validation;
+using AlleycatApp.Auth.Services.Providers;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,9 +9,10 @@ namespace AlleycatApp.Auth.Services.Account
     {
         public async Task<IdentityResult> RegisterAsync<TUser>(TUser user, string password) where TUser : IdentityUser, new()
         {
+            ModelValidator.Validate(user);
             var mgr = userServicesProvider.ProvideManager<TUser>();
 
-            if (await mgr.FindByNameAsync(user.UserName ?? string.Empty) != null)
+            if (await userServicesProvider.DefaultManager.FindByNameAsync(user.UserName ?? string.Empty) != null)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
             var result = await mgr.CreateAsync(user, password);
@@ -24,11 +26,13 @@ namespace AlleycatApp.Auth.Services.Account
 
         public async Task<IdentityResult> UpdateAsync<TUser>(string userId, TUser user) where TUser : IdentityUser, new()
         {
+            ModelValidator.Validate(user);
             var mgr = userServicesProvider.ProvideManager<TUser>();
             var userToEdit = await mgr.FindByIdAsync(userId) ?? 
                              throw new InvalidOperationException("User with the given ID was not found.");
 
-            if (await mgr.FindByNameAsync(user.UserName ?? string.Empty) != null)
+            var existingUser = await userServicesProvider.DefaultManager.FindByNameAsync(user.UserName ?? string.Empty);
+            if (existingUser != null && existingUser != userToEdit)
                 return IdentityResult.Failed(new IdentityError { Code = "UserExists", Description = "User with the specified name already exists." });
 
             return await mgr.UpdateAsync(mapper.Map(user, userToEdit) ?? throw new InvalidOperationException("Invalid user mapping"));
