@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Repositories\Race\" />
   </ItemGroup>
 
 </Project>
