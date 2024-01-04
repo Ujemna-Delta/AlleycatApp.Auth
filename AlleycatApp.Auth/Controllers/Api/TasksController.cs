@@ -1,7 +1,7 @@
 ﻿using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Dto;
-using AlleycatApp.Auth.Repositories.Points;
+using AlleycatApp.Auth.Repositories.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,30 +10,30 @@ namespace AlleycatApp.Auth.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PointsController(IPointRepository repository, IMapper mapper) : ControllerBase
+    public class TasksController(ITaskRepository repository, IMapper mapper) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetPoints() =>
-            Ok(await repository.Entities.Select(p => mapper.Map<PointDto>(p)).ToArrayAsync());
+        public async Task<IActionResult> GetTasks() =>
+            Ok(await repository.Entities.Select(t => mapper.Map<TaskDto>(t)).ToArrayAsync());
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPointById(int id)
+        public async Task<IActionResult> GetTaskById(int id)
         {
             var point = await repository.FindByIdAsync(id);
-            return point != null ? Ok(mapper.Map<PointDto>(point)) : NotFound();
+            return point != null ? Ok(mapper.Map<TaskDto>(point)) : NotFound();
         }
 
-        [HttpGet("race/{id}")]
-        public async Task<IActionResult> GetPointsByRaceId(int id) =>
-            Ok((await repository.GetByRaceIdAsync(id)).Select(mapper.Map<PointDto>));
+        [HttpGet("point/{id}")]
+        public async Task<IActionResult> GetTasksByPointId(int id) =>
+            Ok((await repository.GetByPointId(id)).Select(mapper.Map<TaskDto>));
 
         [HttpPost]
-        public async Task<IActionResult> AddPoint(PointDto pointDto)
+        public async Task<IActionResult> AddTask(TaskDto taskDto)
         {
             try
             {
-                var result = await repository.AddAsync(mapper.Map<Point>(pointDto));
-                return CreatedAtAction(nameof(AddPoint), mapper.Map<PointDto>(result));
+                var result = await repository.AddAsync(mapper.Map<TaskModel>(taskDto));
+                return CreatedAtAction(nameof(AddTask), mapper.Map<TaskDto>(result));
             }
             catch (InvalidModelException e)
             {
@@ -42,11 +42,11 @@ namespace AlleycatApp.Auth.Controllers.Api
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePoint(int id, PointDto pointDto)
+        public async Task<IActionResult> UpdateTask(int id, TaskDto taskDto)
         {
             try
             {
-                await repository.UpdateAsync(id, mapper.Map<Point>(pointDto));
+                await repository.UpdateAsync(id, mapper.Map<TaskModel>(taskDto));
                 return NoContent();
             }
             catch (InvalidModelException e)
@@ -60,7 +60,7 @@ namespace AlleycatApp.Auth.Controllers.Api
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePoint(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
             try
             {

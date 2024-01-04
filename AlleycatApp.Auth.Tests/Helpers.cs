@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Services.Providers;
 using Microsoft.AspNetCore.Identity;
-using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Repositories.Races;
 
 namespace AlleycatApp.Auth.Tests
 {

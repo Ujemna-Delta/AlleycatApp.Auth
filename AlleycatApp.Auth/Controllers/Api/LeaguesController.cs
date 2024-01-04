@@ -1,7 +1,7 @@
 ﻿using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Dto;
-using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Repositories.Leagues;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

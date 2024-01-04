@@ -2,7 +2,7 @@
 using AlleycatApp.Auth.Models;
 using AutoMapper;
 
-namespace AlleycatApp.Auth.Repositories
+namespace AlleycatApp.Auth.Repositories.Leagues
 {
     public class LeagueDbRepository(ApplicationDbContext context, IMapper mapper) : CrudDbRepository<League, short>(context, mapper), ILeagueRepository
     {

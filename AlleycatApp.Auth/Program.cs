@@ -11,7 +11,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Repositories.Leagues;
+using AlleycatApp.Auth.Repositories.Races;
+using AlleycatApp.Auth.Repositories.Points;
+using AlleycatApp.Auth.Repositories.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +58,7 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<ILeagueRepository, LeagueDbRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 builder.Services.AddScoped<IPointRepository, PointDbRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskDbRepository>();
 
 // Add providers
 

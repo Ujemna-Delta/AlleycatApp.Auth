@@ -2,7 +2,7 @@
 using AlleycatApp.Auth.Models;
 using AutoMapper;
 
-namespace AlleycatApp.Auth.Repositories
+namespace AlleycatApp.Auth.Repositories.Races
 {
     public class RaceDbRepository(ApplicationDbContext context, IMapper mapper) : CrudDbRepository<Race, int>(context, mapper), IRaceRepository
     {
