@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlleycatApp.Auth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240104194504_AddPointCompletionModel")]
+    partial class AddPointCompletionModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,33 +213,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                     b.HasIndex("RaceId");
 
                     b.ToTable("RaceCompletions");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.TaskCompletion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AttendeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttendeeId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("TaskCompletions");
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.TaskModel", b =>
@@ -604,25 +580,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                     b.Navigation("Attendee");
 
                     b.Navigation("Race");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.TaskCompletion", b =>
-                {
-                    b.HasOne("AlleycatApp.Auth.Models.Users.Attendee", "Attendee")
-                        .WithMany()
-                        .HasForeignKey("AttendeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AlleycatApp.Auth.Models.TaskModel", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attendee");
-
-                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.TaskModel", b =>

@@ -11,6 +11,10 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
             CreateMap<Point, PointDto>();
             CreateMap<PointDto, Point>().ForMember(r => r.Id, opt => opt.Ignore());
             CreateMap<Point, Point>().ForMember(r => r.Id, opt => opt.Ignore());
+
+            CreateMap<PointCompletion, PointCompletionDto>();
+            CreateMap<PointCompletionDto, PointCompletion>().ForMember(r => r.Id, opt => opt.Ignore());
+            CreateMap<RaceCompletion, PointCompletion>().ForMember(r => r.Id, opt => opt.Ignore());
         }
     }
 }
