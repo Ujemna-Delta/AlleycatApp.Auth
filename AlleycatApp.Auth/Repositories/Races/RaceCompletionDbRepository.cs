@@ -9,10 +9,10 @@ namespace AlleycatApp.Auth.Repositories.Races
     {
         public override IQueryable<RaceCompletion> Entities => context.RaceCompletions;
 
-        public async Task<IEnumerable<RaceCompletion>> GetByUserId(string userId) =>
+        public async Task<IEnumerable<RaceCompletion>> GetByUserIdAsync(string userId) =>
             await Entities.Where(r => r.AttendeeId == userId).ToArrayAsync();
 
-        public async Task<IEnumerable<RaceCompletion>> GetByRaceId(int raceId) =>
+        public async Task<IEnumerable<RaceCompletion>> GetByRaceIdAsync(int raceId) =>
             await Entities.Where(r => r.RaceId == raceId).ToArrayAsync();
 
         public override async Task DeleteAsync(int id)
