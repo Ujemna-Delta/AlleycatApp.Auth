@@ -9,7 +9,9 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
         public BikeProfile()
         {
             CreateMap<Bike, BikeDto>();
-            CreateMap<BikeDto, Bike>().ForMember(r => r.Id, opt => opt.Ignore());
+            CreateMap<BikeDto, Bike>()
+                .ForMember(r => r.Id, opt => opt.Ignore())
+                .ForMember(r => r.AttendeeId, opt => opt.Ignore());
             CreateMap<Bike, Bike>().ForMember(r => r.Id, opt => opt.Ignore());
         }
     }

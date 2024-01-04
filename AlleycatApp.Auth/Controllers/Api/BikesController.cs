@@ -32,14 +32,48 @@ namespace AlleycatApp.Auth.Controllers.Api
         {
             try
             {
-                bikeDto.AttendeeId = UserId;
                 var bike = mapper.Map<Bike>(bikeDto);
+                bike.AttendeeId = UserId;
                 var result = await repository.AddAsync(bike);
                 return CreatedAtAction(nameof(AddBike), mapper.Map<BikeDto>(result));
             }
             catch (InvalidModelException e)
             {
                 return BadRequest(e.ModelError);
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBike(int id, BikeDto bikeDto)
+        {
+            try
+            {
+                var bike = mapper.Map<Bike>(bikeDto);
+                bike.AttendeeId = UserId;
+                await repository.UpdateAsync(id, bike);
+                return NoContent();
+            }
+            catch (InvalidModelException e)
+            {
+                return BadRequest(e.ModelError);
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBike(int id)
+        {
+            try
+            {
+                await repository.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
             }
         }
     }
