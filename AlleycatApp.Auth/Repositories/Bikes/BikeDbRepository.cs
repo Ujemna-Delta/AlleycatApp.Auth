@@ -12,6 +12,9 @@ namespace AlleycatApp.Auth.Repositories.Bikes
         public async Task<IEnumerable<Bike>> GetBikesByUserIdAsync(string userId)
             => await Entities.Where(b => b.AttendeeId == userId).ToArrayAsync();
 
+        public async Task<Bike?> GetBikeByUserAndIdAsync(string userId, int id)
+            => await Entities.SingleOrDefaultAsync(b => b.AttendeeId == userId && b.Id == id);
+
         public override async Task DeleteAsync(int id)
         {
             context.Bikes.Remove(await FindByIdStrictAsync(id));
