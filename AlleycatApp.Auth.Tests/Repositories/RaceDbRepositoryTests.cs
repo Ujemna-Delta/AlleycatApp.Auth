@@ -1,6 +1,7 @@
 ﻿using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Repositories.Races;
 using AutoMapper;
 using Moq;
 
@@ -159,8 +160,8 @@ namespace AlleycatApp.Auth.Tests.Repositories
             // Assert
 
             var exception = await Assert.ThrowsAsync<InvalidModelException>(async () =>  await repository.AddAsync(raceToAdd));
-            Assert.Single(exception.Errors);
-            Assert.Equal(nameof(Race.Name), exception.Errors.Select(e => e.MemberNames.Single()).Single());
+            Assert.Single(exception.Errors!);
+            Assert.Equal(nameof(Race.Name), exception.Errors?.Select(e => e.MemberNames.Single()).Single());
         }
 
         [Fact]
