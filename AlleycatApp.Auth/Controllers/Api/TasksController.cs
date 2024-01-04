@@ -19,8 +19,8 @@ namespace AlleycatApp.Auth.Controllers.Api
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskById(int id)
         {
-            var point = await repository.FindByIdAsync(id);
-            return point != null ? Ok(mapper.Map<TaskDto>(point)) : NotFound();
+            var task = await repository.FindByIdAsync(id);
+            return task != null ? Ok(mapper.Map<TaskDto>(task)) : NotFound();
         }
 
         [HttpGet("point/{id}")]

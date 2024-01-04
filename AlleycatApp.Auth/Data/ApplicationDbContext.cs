@@ -15,5 +15,7 @@ namespace AlleycatApp.Auth.Data
         public virtual DbSet<Race> Races => Set<Race>();
         public virtual DbSet<Point> Points => Set<Point>();
         public virtual DbSet<TaskModel> Tasks => Set<TaskModel>();
+
+        public virtual DbSet<Bike> Bikes => Set<Bike>();
     }
 }

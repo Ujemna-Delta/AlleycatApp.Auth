@@ -3,6 +3,7 @@ using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Models.Users;
+using AlleycatApp.Auth.Repositories.Bikes;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
 using AlleycatApp.Auth.Services.Account;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<ILeagueRepository, LeagueDbRepository>();
 builder.Services.AddScoped<IRaceRepository, RaceDbRepository>();
 builder.Services.AddScoped<IPointRepository, PointDbRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskDbRepository>();
+builder.Services.AddScoped<IBikeRepository, BikeDbRepository>();
 
 // Add providers
 
