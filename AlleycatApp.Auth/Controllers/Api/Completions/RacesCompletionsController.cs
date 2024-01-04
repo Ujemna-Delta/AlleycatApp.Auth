@@ -20,16 +20,16 @@ namespace AlleycatApp.Auth.Controllers.Api.Completions
         public async Task<IActionResult> GetRaceCompletionById(int id)
         {
             var completion = await repository.FindByIdAsync(id);
-            return completion != null ? Ok(completion) : NotFound();
+            return completion != null ? Ok(mapper.Map<RaceCompletionDto>(completion)) : NotFound();
         }
 
         [HttpGet("attendee/{id}")]
         public async Task<IActionResult> GetRaceCompletionsByUserId(string id) =>
-            Ok(await repository.GetByUserIdAsync(id));
+            Ok((await repository.GetByUserIdAsync(id)).Select(mapper.Map<RaceCompletionDto>));
 
         [HttpGet("race/{id}")]
         public async Task<IActionResult> GetRaceCompletionsByRaceId(int id) =>
-            Ok(await repository.GetByRaceIdAsync(id));
+            Ok((await repository.GetByRaceIdAsync(id)).Select(mapper.Map<RaceCompletionDto>));
 
         [HttpPost]
         public async Task<IActionResult> AddRaceCompletion(RaceCompletionDto raceCompletionDto)
