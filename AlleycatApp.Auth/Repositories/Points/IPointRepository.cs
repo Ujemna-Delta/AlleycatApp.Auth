@@ -1,6 +1,6 @@
 ﻿using AlleycatApp.Auth.Models;
 
-namespace AlleycatApp.Auth.Repositories
+namespace AlleycatApp.Auth.Repositories.Points
 {
     public interface IPointRepository : ICrudRepository<Point, int>
     {

@@ -3,7 +3,7 @@ using AlleycatApp.Auth.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlleycatApp.Auth.Repositories
+namespace AlleycatApp.Auth.Repositories.Points
 {
     public class PointDbRepository(ApplicationDbContext context, IMapper mapper) : CrudDbRepository<Point, int>(context, mapper), IPointRepository
     {

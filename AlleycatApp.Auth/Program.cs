@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using AlleycatApp.Auth.Repositories;
+using AlleycatApp.Auth.Repositories.Leagues;
+using AlleycatApp.Auth.Repositories.Races;
+using AlleycatApp.Auth.Repositories.Points;
 
 var builder = WebApplication.CreateBuilder(args);
 
