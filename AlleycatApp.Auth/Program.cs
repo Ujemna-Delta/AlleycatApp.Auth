@@ -62,6 +62,8 @@ builder.Services.AddScoped<IPointRepository, PointDbRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskDbRepository>();
 builder.Services.AddScoped<IBikeRepository, BikeDbRepository>();
 
+builder.Services.AddScoped<IRaceCompletionRepository, RaceCompletionDbRepository>();
+
 // Add providers
 
 builder.Services.AddScoped<IUserServicesProvider, UserServicesProvider>();
