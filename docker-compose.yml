@@ -1,0 +1,26 @@
+# The following configuration file is meant to be used only for development.
+# Secret values provided here have no impact on the production environment.
+
+version: "3.4"
+services:
+  alleycatapp-persistence:
+    build: ./AlleycatApp.Auth
+    ports:
+      - "8000:8080"
+    environment:
+      ConnectionStrings:DefaultConnection: "Server=db;Database=AlleycatAppDb;User=sa;Password=$3cretP@ssword;Encrypt=False;"
+      Jwt:Audience: audience
+      Jwt:Issuer: issuer
+      Jwt:ExpirationTimeMinutes: 15
+      Jwt:SecretKey: "11112222333344445555666677778888"
+      InitialManagerUsername: manager@alleycatapp.com
+      InitialManagerPassword: $3cretP@ssword
+    depends_on:
+      - db
+  db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "1433:1433"
+    environment:
+      MSSQL_SA_PASSWORD: $3cretP@ssword
+      ACCEPT_EULA: "Y"
