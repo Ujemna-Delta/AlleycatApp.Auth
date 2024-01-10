@@ -2,6 +2,7 @@ using System.Text;
 using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
+using AlleycatApp.Auth.Repositories.Leagues;
 using AlleycatApp.Auth.Services.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -64,6 +65,11 @@ using (var scope = app.Services.CreateScope())
 
     await DataFactory.EnsureRolesAsync(roleManager);
     await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
+
+    if (args.Contains("--seed"))
+    {
+        await DataFactory.SeedLeagues(serviceProvider.GetRequiredService<ILeagueRepository>());
+    }
 }
 
 app.UseAuthentication();
