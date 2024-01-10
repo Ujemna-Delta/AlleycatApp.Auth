@@ -67,9 +67,7 @@ using (var scope = app.Services.CreateScope())
     await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
 
     if (args.Contains("--seed"))
-    {
-        await DataFactory.SeedLeagues(serviceProvider.GetRequiredService<ILeagueRepository>());
-    }
+        await DataFactory.SeedSampleData(serviceProvider);
 }
 
 app.UseAuthentication();
