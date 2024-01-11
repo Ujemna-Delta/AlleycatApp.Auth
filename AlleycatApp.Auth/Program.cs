@@ -18,6 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddCors();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddAlleycatAppIdentity();
 builder.Services.AddInfrastructuralServices();
 builder.Services.AddProviders();
@@ -71,6 +74,12 @@ using (var scope = app.Services.CreateScope())
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.MapDefaultControllerRoute();
 app.MapGet("/secret", () => "This is a secret page, you have a valid token.").RequireAuthorization();
