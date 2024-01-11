@@ -2,7 +2,6 @@ using System.Text;
 using AlleycatApp.Auth.Data;
 using AlleycatApp.Auth.Infrastructure;
 using AlleycatApp.Auth.Infrastructure.Configuration;
-using AlleycatApp.Auth.Repositories.Leagues;
 using AlleycatApp.Auth.Services.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;

@@ -23,6 +23,7 @@ namespace AlleycatApp.Auth.Infrastructure
 
         public static async Task SeedSampleData(IServiceProvider serviceProvider)
         {
+            var accountService = serviceProvider.GetRequiredService<IAccountService>();
             var leagueRepository = serviceProvider.GetRequiredService<ILeagueRepository>();
             var raceRepository = serviceProvider.GetRequiredService<IRaceRepository>();
             var pointRepository = serviceProvider.GetRequiredService<IPointRepository>();
@@ -32,6 +33,8 @@ namespace AlleycatApp.Auth.Infrastructure
             await SeedRaces(raceRepository, leagueRepository);
             await SeedPoints(pointRepository, raceRepository);
             await SeedTasks(taskRepository, pointRepository);
+
+            await SeedUsers(accountService, pointRepository);
         }
 
         private static async Task SeedLeagues(ILeagueRepository repository)
@@ -150,6 +153,43 @@ namespace AlleycatApp.Auth.Infrastructure
                     Point = pointRepository.Entities.Skip(1).FirstOrDefault()
                 });
             }
+        }
+
+        private static async Task SeedUsers(IAccountService accountService, IPointRepository pointRepository)
+        {
+            await accountService.RegisterAsync(new Attendee
+            {
+                UserName = "attendee1",
+                FirstName = "Attendee",
+                LastName = "First",
+                Nickname = "attendee1"
+            }, "S3cretP@ssword");
+
+            await accountService.RegisterAsync(new Attendee
+            {
+                UserName = "attendee2",
+                FirstName = "Attendee",
+                LastName = "Second",
+                Nickname = "attendee2",
+                Marks = "Sample marks"
+            }, "$3cretPassword");
+
+            await accountService.RegisterAsync(new Pointer
+            {
+                UserName = "pointer1",
+                FirstName = "Pointer",
+                LastName = "First"
+            }, "S3cretP@ssword");
+
+            await accountService.RegisterAsync(new Pointer
+            {
+                UserName = "pointer2",
+                FirstName = "Pointer",
+                LastName = "Second",
+                Point = pointRepository.Entities.FirstOrDefault()
+            }, "$3cretPassword");
+
+            await accountService.RegisterAsync(new IdentityUser { UserName = "user1" }, "S3cretP@ssword");
         }
     }
 }
