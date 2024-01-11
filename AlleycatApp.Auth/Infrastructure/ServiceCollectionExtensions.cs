@@ -6,6 +6,7 @@ using AlleycatApp.Auth.Repositories.Leagues;
 using AlleycatApp.Auth.Repositories.Points;
 using AlleycatApp.Auth.Repositories.Races;
 using AlleycatApp.Auth.Repositories.Tasks;
+using AlleycatApp.Auth.Repositories.Users;
 using AlleycatApp.Auth.Services.Account;
 using AlleycatApp.Auth.Services.Authentication;
 using AlleycatApp.Auth.Services.Authentication.Jwt;
@@ -68,6 +69,8 @@ namespace AlleycatApp.Auth.Infrastructure
             services.AddScoped<IRaceCompletionRepository, RaceCompletionDbRepository>();
             services.AddScoped<IPointCompletionRepository, PointCompletionDbRepository>();
             services.AddScoped<ITaskCompletionRepository, TaskCompletionDbRepository>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Repositories.Leagues;
 using AlleycatApp.Auth.Repositories.Points;
 using AlleycatApp.Auth.Repositories.Races;
 using AlleycatApp.Auth.Repositories.Tasks;
+using AlleycatApp.Auth.Repositories.Users;
 using AlleycatApp.Auth.Services.Account;
 using Microsoft.AspNetCore.Identity;
 
@@ -28,13 +29,14 @@ namespace AlleycatApp.Auth.Infrastructure
             var raceRepository = serviceProvider.GetRequiredService<IRaceRepository>();
             var pointRepository = serviceProvider.GetRequiredService<IPointRepository>();
             var taskRepository = serviceProvider.GetRequiredService<ITaskRepository>();
+            var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
 
             await SeedLeagues(leagueRepository);
             await SeedRaces(raceRepository, leagueRepository);
             await SeedPoints(pointRepository, raceRepository);
             await SeedTasks(taskRepository, pointRepository);
 
-            await SeedUsers(accountService, pointRepository);
+            await SeedUsers(accountService, userRepository, pointRepository);
         }
 
         private static async Task SeedLeagues(ILeagueRepository repository)
@@ -155,41 +157,48 @@ namespace AlleycatApp.Auth.Infrastructure
             }
         }
 
-        private static async Task SeedUsers(IAccountService accountService, IPointRepository pointRepository)
+        private static async Task SeedUsers(IAccountService accountService, IUserRepository userRepository, IPointRepository pointRepository)
         {
-            await accountService.RegisterAsync(new Attendee
-            {
-                UserName = "attendee1",
-                FirstName = "Attendee",
-                LastName = "First",
-                Nickname = "attendee1"
-            }, "S3cretP@ssword");
+            if (!userRepository.GetUsers<IdentityUser>().Any())
+                await accountService.RegisterAsync(new IdentityUser { UserName = "user1" }, "S3cretP@ssword");
 
-            await accountService.RegisterAsync(new Attendee
+            if (!userRepository.GetUsers<Attendee>().Any())
             {
-                UserName = "attendee2",
-                FirstName = "Attendee",
-                LastName = "Second",
-                Nickname = "attendee2",
-                Marks = "Sample marks"
-            }, "$3cretPassword");
+                await accountService.RegisterAsync(new Attendee
+                {
+                    UserName = "attendee1",
+                    FirstName = "Attendee",
+                    LastName = "First",
+                    Nickname = "attendee1"
+                }, "S3cretP@ssword");
 
-            await accountService.RegisterAsync(new Pointer
+                await accountService.RegisterAsync(new Attendee
+                {
+                    UserName = "attendee2",
+                    FirstName = "Attendee",
+                    LastName = "Second",
+                    Nickname = "attendee2",
+                    Marks = "Sample marks"
+                }, "$3cretPassword");
+            }
+
+            if (!userRepository.GetUsers<Pointer>().Any())
             {
-                UserName = "pointer1",
-                FirstName = "Pointer",
-                LastName = "First"
-            }, "S3cretP@ssword");
+                await accountService.RegisterAsync(new Pointer
+                {
+                    UserName = "pointer1",
+                    FirstName = "Pointer",
+                    LastName = "First"
+                }, "S3cretP@ssword");
 
-            await accountService.RegisterAsync(new Pointer
-            {
-                UserName = "pointer2",
-                FirstName = "Pointer",
-                LastName = "Second",
-                Point = pointRepository.Entities.FirstOrDefault()
-            }, "$3cretPassword");
-
-            await accountService.RegisterAsync(new IdentityUser { UserName = "user1" }, "S3cretP@ssword");
+                await accountService.RegisterAsync(new Pointer
+                {
+                    UserName = "pointer2",
+                    FirstName = "Pointer",
+                    LastName = "Second",
+                    Point = pointRepository.Entities.FirstOrDefault()
+                }, "$3cretPassword");
+            }
         }
     }
 }
