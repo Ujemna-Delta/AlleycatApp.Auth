@@ -1,5 +1,6 @@
 ﻿using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Users;
+using AlleycatApp.Auth.Repositories.Bikes;
 using AlleycatApp.Auth.Repositories.Leagues;
 using AlleycatApp.Auth.Repositories.Points;
 using AlleycatApp.Auth.Repositories.Races;
@@ -30,6 +31,7 @@ namespace AlleycatApp.Auth.Infrastructure
             var pointRepository = serviceProvider.GetRequiredService<IPointRepository>();
             var taskRepository = serviceProvider.GetRequiredService<ITaskRepository>();
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
+            var bikeRepository = serviceProvider.GetRequiredService<IBikeRepository>();
 
             await SeedLeagues(leagueRepository);
             await SeedRaces(raceRepository, leagueRepository);
@@ -37,6 +39,8 @@ namespace AlleycatApp.Auth.Infrastructure
             await SeedTasks(taskRepository, pointRepository);
 
             await SeedUsers(accountService, userRepository, pointRepository);
+
+            await SeedBikes(bikeRepository, userRepository);
         }
 
         private static async Task SeedLeagues(ILeagueRepository repository)
@@ -198,6 +202,16 @@ namespace AlleycatApp.Auth.Infrastructure
                     LastName = "Second",
                     Point = pointRepository.Entities.FirstOrDefault()
                 }, "$3cretPassword");
+            }
+        }
+
+        private static async Task SeedBikes(IBikeRepository bikeRepository, IUserRepository userRepository)
+        {
+            if (!bikeRepository.Entities.Any())
+            {
+                await bikeRepository.AddAsync(new Bike { Name = "Bike 1", AttendeeId = userRepository.GetUsers<Attendee>().First().Id });
+                await bikeRepository.AddAsync(new Bike { Name = "Bike 2", AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id });
+                await bikeRepository.AddAsync(new Bike { Name = "Bike 3", AttendeeId = userRepository.GetUsers<Attendee>().First().Id });
             }
         }
     }
