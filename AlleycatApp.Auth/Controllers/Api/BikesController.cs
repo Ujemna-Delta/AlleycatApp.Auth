@@ -18,13 +18,13 @@ namespace AlleycatApp.Auth.Controllers.Api
 
         [HttpGet]
         public async Task<IActionResult> GetBikes()
-            => Ok(await repository.GetBikesByUserIdAsync(UserId));
+            => Ok((await repository.GetBikesByUserIdAsync(UserId)).Select(mapper.Map<BikeDto>));
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBikeById(int id)
         {
             var result = await repository.GetBikeByUserAndIdAsync(UserId, id);
-            return result != null ? Ok(result) : NotFound();
+            return result != null ? Ok(mapper.Map<BikeDto>(result)) : NotFound();
         }
 
         [HttpPost]

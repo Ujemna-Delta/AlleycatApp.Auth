@@ -37,9 +37,7 @@ namespace AlleycatApp.Auth.Infrastructure
             await SeedRaces(raceRepository, leagueRepository);
             await SeedPoints(pointRepository, raceRepository);
             await SeedTasks(taskRepository, pointRepository);
-
             await SeedUsers(accountService, userRepository, pointRepository);
-
             await SeedBikes(bikeRepository, userRepository);
         }
 
