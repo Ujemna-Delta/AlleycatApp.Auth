@@ -16,6 +16,7 @@ services:
       Jwt:SecretKey: "11112222333344445555666677778888"
       InitialManagerUsername: manager@alleycatapp.com
       InitialManagerPassword: S3cretP@ssword
+      ASPNETCORE_ENVIRONMENT: Development
     depends_on:
       - db
   db:
