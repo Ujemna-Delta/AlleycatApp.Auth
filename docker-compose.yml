@@ -5,16 +5,17 @@ version: "3.4"
 services:
   alleycatapp-persistence:
     build: ./AlleycatApp.Auth
+    command: --seed
     ports:
       - "8000:8080"
     environment:
-      ConnectionStrings:DefaultConnection: "Server=db;Database=AlleycatAppDb;User=sa;Password=$3cretP@ssword;Encrypt=False;"
+      ConnectionStrings:DefaultConnection: "Server=db;Database=AlleycatAppDb;User=sa;Password=S3cretP@ssword;Encrypt=False;"
       Jwt:Audience: audience
       Jwt:Issuer: issuer
       Jwt:ExpirationTimeMinutes: 15
       Jwt:SecretKey: "11112222333344445555666677778888"
       InitialManagerUsername: manager@alleycatapp.com
-      InitialManagerPassword: $3cretP@ssword
+      InitialManagerPassword: S3cretP@ssword
     depends_on:
       - db
   db:
@@ -22,5 +23,5 @@ services:
     ports:
       - "1433:1433"
     environment:
-      MSSQL_SA_PASSWORD: $3cretP@ssword
+      MSSQL_SA_PASSWORD: S3cretP@ssword
       ACCEPT_EULA: "Y"

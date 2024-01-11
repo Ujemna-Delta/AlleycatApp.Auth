@@ -29,6 +29,11 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
             CreateMap<ManagerDto, Manager>().ForMember(x => x.Id, opt => opt.Ignore());
             CreateMap<PointerDto, Pointer>().ForMember(x => x.Id, opt => opt.Ignore());
             CreateMap<AttendeeDto, Attendee>().ForMember(x => x.Id, opt => opt.Ignore());
+
+            CreateMap<IdentityUser, UserDto>();
+            CreateMap<Manager, ManagerDto>();
+            CreateMap<Pointer, PointerDto>();
+            CreateMap<Attendee, AttendeeDto>();
         }
     }
 }
