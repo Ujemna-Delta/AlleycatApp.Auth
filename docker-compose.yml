@@ -17,6 +17,7 @@ services:
       InitialManagerUsername: manager@alleycatapp.com
       InitialManagerPassword: S3cretP@ssword
       ASPNETCORE_ENVIRONMENT: Development
+    entrypoint: ["/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "AlleycatApp.Auth.dll"]
     depends_on:
       - db
   db:
