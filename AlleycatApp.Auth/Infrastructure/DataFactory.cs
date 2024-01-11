@@ -1,7 +1,9 @@
 ﻿using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories.Leagues;
+using AlleycatApp.Auth.Repositories.Points;
 using AlleycatApp.Auth.Repositories.Races;
+using AlleycatApp.Auth.Repositories.Tasks;
 using AlleycatApp.Auth.Services.Account;
 using Microsoft.AspNetCore.Identity;
 
@@ -23,9 +25,13 @@ namespace AlleycatApp.Auth.Infrastructure
         {
             var leagueRepository = serviceProvider.GetRequiredService<ILeagueRepository>();
             var raceRepository = serviceProvider.GetRequiredService<IRaceRepository>();
+            var pointRepository = serviceProvider.GetRequiredService<IPointRepository>();
+            var taskRepository = serviceProvider.GetRequiredService<ITaskRepository>();
 
             await SeedLeagues(leagueRepository);
             await SeedRaces(raceRepository, leagueRepository);
+            await SeedPoints(pointRepository, raceRepository);
+            await SeedTasks(taskRepository, pointRepository);
         }
 
         private static async Task SeedLeagues(ILeagueRepository repository)
@@ -49,6 +55,7 @@ namespace AlleycatApp.Auth.Infrastructure
                     Description = "Description 1",
                     IsActive = false, 
                     IsFreeOrder = true, 
+                    ValueModifier = 1.4M,
                     StartAddress = "Address 1",
                     League = leagueRepository.Entities.FirstOrDefault()
                 });
@@ -60,6 +67,7 @@ namespace AlleycatApp.Auth.Infrastructure
                     IsActive = false,
                     IsFreeOrder = false,
                     StartAddress = "Address 2",
+                    ValueModifier = 3.5M,
                     League = leagueRepository.Entities.OrderBy(l => l.Id).LastOrDefault()
                 });
 
@@ -72,6 +80,74 @@ namespace AlleycatApp.Auth.Infrastructure
                     IsFreeOrder = true,
                     StartAddress = "Address 3",
                     League = leagueRepository.Entities.FirstOrDefault()
+                });
+            }
+        }
+
+        private static async Task SeedPoints(IPointRepository pointRepository, IRaceRepository raceRepository)
+        {
+            if (!pointRepository.Entities.Any())
+            {
+                await pointRepository.AddAsync(new Point
+                {
+                    Name = "Point 1",
+                    Address = "Address 1",
+                    IsHidden = false,
+                    IsPrepared = false,
+                    Order = 1,
+                    Race = raceRepository.Entities.FirstOrDefault(),
+                    Value = 10
+                });
+
+                await pointRepository.AddAsync(new Point
+                {
+                    Name = "Point 2",
+                    Address = "Address 2",
+                    IsHidden = false,
+                    IsPrepared = false,
+                    Order = 2,
+                    Race = raceRepository.Entities.FirstOrDefault(),
+                    Value = 5
+                });
+
+                await pointRepository.AddAsync(new Point
+                {
+                    Name = "Point 3",
+                    Address = "Address 3",
+                    IsHidden = false,
+                    IsPrepared = true,
+                    Order = 1,
+                    Race = raceRepository.Entities.OrderBy(r => r.Id).LastOrDefault(),
+                    Value = 20
+                });
+            }
+        }
+
+        private static async Task SeedTasks(ITaskRepository taskRepository, IPointRepository pointRepository)
+        {
+            if (!taskRepository.Entities.Any())
+            {
+                await taskRepository.AddAsync(new TaskModel
+                {
+                    Name = "Task 1",
+                    Description = "Description 1",
+                    Value = 15,
+                    Point = pointRepository.Entities.FirstOrDefault()
+                });
+
+                await taskRepository.AddAsync(new TaskModel
+                {
+                    Name = "Task 2",
+                    Value = 10,
+                    Point = pointRepository.Entities.FirstOrDefault()
+                });
+
+                await taskRepository.AddAsync(new TaskModel
+                {
+                    Name = "Task 3",
+                    Description = "Description 3",
+                    Value = 5,
+                    Point = pointRepository.Entities.Skip(1).FirstOrDefault()
                 });
             }
         }
