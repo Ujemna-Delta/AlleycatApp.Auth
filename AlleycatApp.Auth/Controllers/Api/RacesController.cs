@@ -4,12 +4,13 @@ using AlleycatApp.Auth.Models.Dto;
 using AlleycatApp.Auth.Repositories.Races;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlleycatApp.Auth.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RacesController(IRaceRepository raceRepository, IMapper mapper) : ControllerBase
+    public class RacesController(IRaceRepository raceRepository, IRaceAttendanceRepository raceAttendanceRepository, IMapper mapper) : ControllerBase
     {
         [HttpGet] 
         public IActionResult GetRaces() => Ok(raceRepository.Entities.Select(e => mapper.Map<RaceDto>(e)).ToArray());
@@ -61,6 +62,71 @@ namespace AlleycatApp.Auth.Controllers.Api
             try
             {
                 await raceRepository.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("attendances")]
+        public async Task<IActionResult> GetAttendances() =>
+            Ok((await raceAttendanceRepository.Entities.ToArrayAsync()).Select(mapper.Map<RaceAttendanceDto>));
+
+        [HttpGet("attendances/{id}")]
+        public async Task<IActionResult> GetAttendanceById(int id)
+        {
+            var attendance = await raceAttendanceRepository.FindByIdAsync(id);
+            return attendance != null ? Ok(mapper.Map<RaceAttendanceDto>(attendance)) : NotFound();
+        }
+
+        [HttpGet("attendances/{raceId}/{userId}")]
+        public async Task<IActionResult> GetAttendanceByRaceAndUserId(int raceId, string userId)
+        {
+            var attendance = await raceAttendanceRepository.GetByUserAndRaceIdAsync(userId, raceId);
+            return attendance != null ? Ok(mapper.Map<RaceAttendanceDto>(attendance)) : NotFound();
+        }
+
+        [HttpPost("attendances")]
+        public async Task<IActionResult> AddAttendance(RaceAttendanceDto attendanceDto)
+        {
+            try
+            {
+                var attendance = mapper.Map<RaceAttendance>(attendanceDto);
+                var result = await raceAttendanceRepository.AddAsync(attendance);
+                return CreatedAtAction(nameof(AddAttendance), mapper.Map<RaceAttendanceDto>(result));
+            }
+            catch (InvalidModelException e)
+            {
+                return BadRequest(e.ModelError);
+            }
+        }
+
+        [HttpPut("attendances/{id}")]
+        public async Task<IActionResult> UpdateAttendance(int id, RaceAttendanceDto attendanceDto)
+        {
+            try
+            {
+                await raceAttendanceRepository.UpdateAsync(id, mapper.Map<RaceAttendance>(attendanceDto));
+                return NoContent();
+            }
+            catch (InvalidModelException e)
+            {
+                return BadRequest(e.ModelError);
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("attendances/{id}")]
+        public async Task<IActionResult> DeleteAttendance(int id)
+        {
+            try
+            {
+                await raceAttendanceRepository.DeleteAsync(id);
                 return NoContent();
             }
             catch (InvalidOperationException)

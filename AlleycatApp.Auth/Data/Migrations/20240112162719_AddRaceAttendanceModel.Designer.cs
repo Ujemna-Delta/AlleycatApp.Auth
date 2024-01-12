@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlleycatApp.Auth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112162719_AddRaceAttendanceModel")]
+    partial class AddRaceAttendanceModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,33 +136,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                     b.HasIndex("PointId");
 
                     b.ToTable("PointCompletions");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.PointOrderOverride", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AttendeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<byte>("Order")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int>("PointId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttendeeId");
-
-                    b.HasIndex("PointId");
-
-                    b.ToTable("PointOrderOverrides");
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.Race", b =>
@@ -614,25 +590,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.PointCompletion", b =>
-                {
-                    b.HasOne("AlleycatApp.Auth.Models.Users.Attendee", "Attendee")
-                        .WithMany()
-                        .HasForeignKey("AttendeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AlleycatApp.Auth.Models.Point", "Point")
-                        .WithMany()
-                        .HasForeignKey("PointId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attendee");
-
-                    b.Navigation("Point");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.PointOrderOverride", b =>
                 {
                     b.HasOne("AlleycatApp.Auth.Models.Users.Attendee", "Attendee")
                         .WithMany()
