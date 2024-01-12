@@ -23,5 +23,6 @@ namespace AlleycatApp.Auth.Data
         public virtual DbSet<TaskCompletion> TaskCompletions => Set<TaskCompletion>();
 
         public virtual DbSet<RaceAttendance> RaceAttendances => Set<RaceAttendance>();
+        public virtual DbSet<PointOrderOverride> PointOrderOverrides => Set<PointOrderOverride>();
     }
 }
