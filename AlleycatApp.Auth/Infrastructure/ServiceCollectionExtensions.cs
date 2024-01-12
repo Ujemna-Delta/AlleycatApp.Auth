@@ -71,6 +71,7 @@ namespace AlleycatApp.Auth.Infrastructure
             services.AddScoped<ITaskCompletionRepository, TaskCompletionDbRepository>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRaceAttendanceRepository, RaceAttendanceDbRepository>();
 
             return services;
         }

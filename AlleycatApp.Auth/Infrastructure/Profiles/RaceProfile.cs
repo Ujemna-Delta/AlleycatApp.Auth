@@ -15,6 +15,10 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
             CreateMap<RaceCompletion, RaceCompletionDto>();
             CreateMap<RaceCompletionDto, RaceCompletion>().ForMember(r => r.Id, opt => opt.Ignore());
             CreateMap<RaceCompletion, RaceCompletion>().ForMember(r => r.Id, opt => opt.Ignore());
+
+            CreateMap<RaceAttendance, RaceAttendanceDto>();
+            CreateMap<RaceAttendanceDto, RaceAttendance>().ForMember(r => r.Id, opt => opt.Ignore());
+            CreateMap<RaceAttendance, RaceAttendance>().ForMember(r => r.Id, opt => opt.Ignore());
         }
     }
 }
