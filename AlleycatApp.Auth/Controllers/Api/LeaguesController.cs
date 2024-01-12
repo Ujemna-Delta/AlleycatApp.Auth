@@ -10,7 +10,7 @@ namespace AlleycatApp.Auth.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LeaguesController(ILeagueRepository repository, IMapper mapper) : ControllerBase
+    public class LeaguesController(ILeagueRepository repository, ILeagueScoreRepository scoreRepository, IMapper mapper) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetLeagues() =>
@@ -61,6 +61,72 @@ namespace AlleycatApp.Auth.Controllers.Api
             try
             {
                 await repository.DeleteAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet("scores")]
+        public async Task<IActionResult> GetLeagueScores() =>
+            Ok((await scoreRepository.Entities.ToArrayAsync()).Select(mapper.Map<LeagueScoreDto>));
+
+        [HttpGet("scores/{id}")]
+        public async Task<IActionResult> GetLeagueScoreById(int id)
+        {
+            var score = await scoreRepository.FindByIdAsync(id);
+            return score != null ? Ok(mapper.Map<LeagueScoreDto>(score)) : NotFound();
+        }
+
+        [HttpGet("scores/user/{userId}")]
+        public async Task<IActionResult> GetLeagueScoresByUserId(string userId) =>
+            Ok((await scoreRepository.GetByUserIdAsync(userId)).Select(mapper.Map<LeagueScoreDto>));
+
+        [HttpGet("scores/league/{leagueId}")]
+        public async Task<IActionResult> GetLeagueScoresByUserId(short leagueId) =>
+            Ok((await scoreRepository.GetByLeagueIdAsync(leagueId)).Select(mapper.Map<LeagueScoreDto>));
+
+        [HttpPost("scores")]
+        public async Task<IActionResult> AddLeagueScore(LeagueScoreDto leagueScoreDto)
+        {
+            try
+            {
+                var score = mapper.Map<LeagueScore>(leagueScoreDto);
+                var result = await scoreRepository.AddAsync(score);
+                return CreatedAtAction(nameof(AddLeagueScore), mapper.Map<LeagueScoreDto>(result));
+            }
+            catch (InvalidModelException e)
+            {
+                return BadRequest(e.ModelError);
+            }
+        }
+
+        [HttpPut("scores/{id}")]
+        public async Task<IActionResult> UpdateLeagueScore(int id, LeagueScoreDto leagueScoreDto)
+        {
+            try
+            {
+                await scoreRepository.UpdateAsync(id, mapper.Map<LeagueScore>(leagueScoreDto));
+                return NoContent();
+            }
+            catch (InvalidModelException e)
+            {
+                return BadRequest(e.ModelError);
+            }
+            catch (InvalidOperationException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete("scores/{id}")]
+        public async Task<IActionResult> DeleteLeagueScore(int id)
+        {
+            try
+            {
+                await scoreRepository.DeleteAsync(id);
                 return NoContent();
             }
             catch (InvalidOperationException)

@@ -11,6 +11,10 @@ namespace AlleycatApp.Auth.Infrastructure.Profiles
             CreateMap<League, LeagueDto>();
             CreateMap<LeagueDto, League>().ForMember(r => r.Id, opt => opt.Ignore());
             CreateMap<League, League>().ForMember(r => r.Id, opt => opt.Ignore());
+
+            CreateMap<LeagueScore, LeagueScoreDto>();
+            CreateMap<LeagueScoreDto, LeagueScore>().ForMember(r => r.Id, opt => opt.Ignore());
+            CreateMap<LeagueScore, LeagueScore>().ForMember(r => r.Id, opt => opt.Ignore());
         }
     }
 }

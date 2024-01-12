@@ -4,6 +4,7 @@ using AlleycatApp.Auth.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlleycatApp.Auth.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240112175828_ChangeRaceScoreType")]
+    partial class ChangeRaceScoreType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,33 +69,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Leagues");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.LeagueScore", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AttendeeId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<short>("LeagueId")
-                        .HasColumnType("smallint");
-
-                    b.Property<decimal>("Score")
-                        .HasColumnType("decimal(8, 2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AttendeeId");
-
-                    b.HasIndex("LeagueId");
-
-                    b.ToTable("LeagueScores");
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.Point", b =>
@@ -629,25 +605,6 @@ namespace AlleycatApp.Auth.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Attendee");
-                });
-
-            modelBuilder.Entity("AlleycatApp.Auth.Models.LeagueScore", b =>
-                {
-                    b.HasOne("AlleycatApp.Auth.Models.Users.Attendee", "Attendee")
-                        .WithMany()
-                        .HasForeignKey("AttendeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AlleycatApp.Auth.Models.League", "League")
-                        .WithMany()
-                        .HasForeignKey("LeagueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Attendee");
-
-                    b.Navigation("League");
                 });
 
             modelBuilder.Entity("AlleycatApp.Auth.Models.Point", b =>
