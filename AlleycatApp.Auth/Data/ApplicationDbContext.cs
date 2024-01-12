@@ -24,5 +24,6 @@ namespace AlleycatApp.Auth.Data
 
         public virtual DbSet<RaceAttendance> RaceAttendances => Set<RaceAttendance>();
         public virtual DbSet<PointOrderOverride> PointOrderOverrides => Set<PointOrderOverride>();
+        public virtual DbSet<LeagueScore> LeagueScores => Set<LeagueScore>();
     }
 }
