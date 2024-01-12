@@ -9,7 +9,7 @@ namespace AlleycatApp.Auth.Repositories.Points
     {
         public override IQueryable<PointOrderOverride> Entities => context.PointOrderOverrides;
 
-        public async Task<PointOrderOverride?> GetByPointAndUserId(int pointId, string userId) =>
+        public async Task<PointOrderOverride?> GetByPointAndUserIdAsync(int pointId, string userId) =>
             await Entities.SingleOrDefaultAsync(p => p.AttendeeId == userId && p.PointId == pointId);
 
         public override async Task DeleteAsync(int id)
