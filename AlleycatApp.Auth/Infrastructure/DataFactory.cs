@@ -56,6 +56,7 @@ namespace AlleycatApp.Auth.Infrastructure
             var userRepository = serviceProvider.GetRequiredService<IUserRepository>();
             var bikeRepository = serviceProvider.GetRequiredService<IBikeRepository>();
             var leagueScoreRepository = serviceProvider.GetRequiredService<ILeagueScoreRepository>();
+            var raceAttendanceRepository = serviceProvider.GetRequiredService<IRaceAttendanceRepository>();
 
             await SeedLeagues(leagueRepository);
             await SeedRaces(raceRepository, leagueRepository);
@@ -63,6 +64,7 @@ namespace AlleycatApp.Auth.Infrastructure
             await SeedTasks(taskRepository, pointRepository);
             await SeedUsers(accountService, userRepository, pointRepository);
             await SeedBikes(bikeRepository, userRepository);
+            await SeedRaceAttendances(raceAttendanceRepository, raceRepository, userRepository);
             await SeedLeagueScores(leagueScoreRepository, leagueRepository, userRepository);
         }
 
@@ -390,64 +392,116 @@ namespace AlleycatApp.Auth.Infrastructure
             }
         }
 
+        private static async Task SeedRaceAttendances(IRaceAttendanceRepository raceAttendanceRepository,
+            IRaceRepository raceRepository, IUserRepository userRepository)
+        {
+            if (!raceAttendanceRepository.Entities.Any())
+            {
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
+                    Race = raceRepository.Entities.Skip(4).First()
+                });
+
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
+                    Race = raceRepository.Entities.Skip(4).First()
+                });
+
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
+                    Race = raceRepository.Entities.Skip(4).First()
+                });
+
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
+                    Race = raceRepository.Entities.Skip(5).First()
+                });
+
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
+                    Race = raceRepository.Entities.Skip(5).First()
+                });
+
+                await raceAttendanceRepository.AddAsync(new RaceAttendance
+                {
+                    IsConfirmed = true,
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
+                    Race = raceRepository.Entities.Skip(6).First()
+                });
+            }
+        }
+
         private static async Task SeedLeagueScores(ILeagueScoreRepository leagueScoreRepository, ILeagueRepository leagueRepository, IUserRepository userRepository)
         {
-            await leagueScoreRepository.AddAsync(new LeagueScore
+            if (!leagueScoreRepository.Entities.Any())
             {
-                AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
-                League = leagueRepository.Entities.First(),
-                Score = 1000
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
+                    League = leagueRepository.Entities.First(),
+                    Score = 1000
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
-                League = leagueRepository.Entities.First(),
-                Score = 1200
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
+                    League = leagueRepository.Entities.First(),
+                    Score = 1200
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
-                League = leagueRepository.Entities.First(),
-                Score = 1400
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
+                    League = leagueRepository.Entities.First(),
+                    Score = 1400
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(3).First().Id,
-                League = leagueRepository.Entities.First(),
-                Score = 1600
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(3).First().Id,
+                    League = leagueRepository.Entities.First(),
+                    Score = 1600
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
-                League = leagueRepository.Entities.Skip(1).First(),
-                Score = 1400
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().First().Id,
+                    League = leagueRepository.Entities.Skip(1).First(),
+                    Score = 1400
 
-            });
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
-                League = leagueRepository.Entities.Skip(1).First(),
-                Score = 1200
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(1).First().Id,
+                    League = leagueRepository.Entities.Skip(1).First(),
+                    Score = 1200
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
-                League = leagueRepository.Entities.Skip(1).First(),
-                Score = 1350
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(2).First().Id,
+                    League = leagueRepository.Entities.Skip(1).First(),
+                    Score = 1350
+                });
 
-            await leagueScoreRepository.AddAsync(new LeagueScore
-            {
-                AttendeeId = userRepository.GetUsers<Attendee>().Skip(3).First().Id,
-                League = leagueRepository.Entities.Skip(1).First(),
-                Score = 1600
-            });
+                await leagueScoreRepository.AddAsync(new LeagueScore
+                {
+                    AttendeeId = userRepository.GetUsers<Attendee>().Skip(3).First().Id,
+                    League = leagueRepository.Entities.Skip(1).First(),
+                    Score = 1600
+                });
+            }
         }
     }
 }
