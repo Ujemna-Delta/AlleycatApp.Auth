@@ -34,6 +34,14 @@ namespace AlleycatApp.Auth.Infrastructure.Configuration
             return this;
         }
 
+        public IApplicationConfigurationBuilder BuildDataSeedingOptions()
+        {
+            _appConfig.ClearOnInit = TryGetValue<bool>("ClearOnInit");
+            _appConfig.SeedData = TryGetValue<bool>("SeedData");
+
+            return this;
+        }
+
         public ApplicationConfiguration Build() => _appConfig;
 
         private T TryGetValue<T>(string key) => configuration.GetValue<T>(key) ??

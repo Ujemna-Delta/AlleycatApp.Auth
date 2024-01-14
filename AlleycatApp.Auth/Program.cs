@@ -30,6 +30,7 @@ builder.Services.AddUserServices();
 var appConfig = new ApplicationConfigurationBuilder(builder.Configuration)
     .BuildJwtConfiguration()
     .BuildInitialManagerCredentials()
+    .BuildDataSeedingOptions()
     .Build();
 
 builder.Services.AddAuthentication(options =>
@@ -68,10 +69,10 @@ using (var scope = app.Services.CreateScope())
     await DataFactory.EnsureRolesAsync(roleManager);
     await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
 
-    if (args.Contains("--clear"))
+    if (appConfig.ClearOnInit)
         await DataFactory.ClearDatabase(context);
 
-    if (args.Contains("--seed"))
+    if (appConfig.SeedData)
         await DataFactory.SeedSampleData(serviceProvider);
 }
 
