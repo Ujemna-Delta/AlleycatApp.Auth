@@ -4,6 +4,7 @@
     {
         IApplicationConfigurationBuilder BuildJwtConfiguration();
         IApplicationConfigurationBuilder BuildInitialManagerCredentials();
+        IApplicationConfigurationBuilder BuildDataSeedingOptions();
         ApplicationConfiguration Build();
     }
 }

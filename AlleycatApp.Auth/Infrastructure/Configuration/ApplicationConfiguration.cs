@@ -5,5 +5,8 @@
         public JwtConfiguration? JwtConfiguration { get; set; }
         public string InitialManagerUserName { get; set; } = string.Empty;
         public string InitialManagerPassword { get; set; } = string.Empty;
+
+        public bool SeedData { get; set; }
+        public bool ClearOnInit { get; set; }
     }
 }
