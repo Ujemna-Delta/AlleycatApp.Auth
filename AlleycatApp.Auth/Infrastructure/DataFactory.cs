@@ -1,4 +1,5 @@
-﻿using AlleycatApp.Auth.Models;
+﻿using AlleycatApp.Auth.Data;
+using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories.Bikes;
 using AlleycatApp.Auth.Repositories.Leagues;
@@ -22,6 +23,28 @@ namespace AlleycatApp.Auth.Infrastructure
 
         public static async Task CreateInitialManager(IAccountService accountService, string userName, string password)
             => await accountService.RegisterAsync(new Manager { UserName = userName }, password);
+
+        public static async Task ClearDatabase(ApplicationDbContext context)
+        {
+            context.LeagueScores.RemoveRange(context.LeagueScores);
+            context.PointOrderOverrides.RemoveRange(context.PointOrderOverrides);
+            context.RaceAttendances.RemoveRange(context.RaceAttendances);
+
+            context.TaskCompletions.RemoveRange(context.TaskCompletions);
+            context.PointCompletions.RemoveRange(context.PointCompletions);
+            context.RaceCompletions.RemoveRange(context.RaceCompletions);
+
+            context.Bikes.RemoveRange(context.Bikes);
+            context.Tasks.RemoveRange(context.Tasks);
+            context.Points.RemoveRange(context.Points);
+            context.Races.RemoveRange(context.Races);
+            context.Leagues.RemoveRange(context.Leagues);
+
+            context.Attendees.RemoveRange(context.Attendees);
+            context.Pointers.RemoveRange(context.Pointers);
+
+            await context.SaveChangesAsync();
+        }
 
         public static async Task SeedSampleData(IServiceProvider serviceProvider)
         {

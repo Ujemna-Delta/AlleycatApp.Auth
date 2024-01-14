@@ -68,6 +68,9 @@ using (var scope = app.Services.CreateScope())
     await DataFactory.EnsureRolesAsync(roleManager);
     await DataFactory.CreateInitialManager(accountService, appConfig.InitialManagerUserName, appConfig.InitialManagerPassword);
 
+    if (args.Contains("--clear"))
+        await DataFactory.ClearDatabase(context);
+
     if (args.Contains("--seed"))
         await DataFactory.SeedSampleData(serviceProvider);
 }
