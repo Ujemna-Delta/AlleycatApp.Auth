@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "name": "Wyścig Prędkości Szalonych",
+    "description": "Odkryj ekstremalne trasy, gdzie rowerzyści muszą pokonać kręte serpentyny i niebezpieczne zakręty, osiągając niewyobrażalne prędkości w rywalizacji o tytuł Mistrza Prędkości Szalonych na dwóch kółkach.",
+    "beginTime": "2023-12-20T00:00:00",
+    "startAddress": "Sample address 1",
+    "valueModifier": 1.40,
+    "isActive": false,
+    "isFreeOrder": false
+  },
+  {
+    "id": 2,
+    "name": "Grand Prix Mgiełkowej Doliny",
+    "description": "Zanurz się w tajemniczym świecie, gdzie mgła otacza malowniczą dolinę, tworząc niezwykłą scenerię dla rowerowego Grand Prix. Tutaj zwinność i precyzja są kluczowe dla zdobycia zwycięstwa na dwóch kółkach.",
+    "beginTime": "2023-12-07T00:00:00",
+    "startAddress": "Sample address 1",
+    "valueModifier": null,
+    "isActive": true,
+    "isFreeOrder": false
+  },
+  {
+    "id": 3,
+    "name": "Wyścig Supernowoczesnych Maszyn",
+    "description": "W tej futurystycznej arenie, najnowocześniejsze rowery rywalizują o miano najszybszych maszyn, wykorzystując najnowsze technologie i innowacje, by zdobyć tytuł Króla Supernowoczesnych Maszyn na dwóch kółkach.",
+    "beginTime": "2024-01-07T12:20:00",
+    "startAddress": "Sample address 2",
+    "valueModifier": null,
+    "isActive": false,
+    "isFreeOrder": true
+  },
+  {
+    "id": 4,
+    "name": "Rajd Płomiennej Pustyni",
+    "description": "Przeżyj ekstremalne wyzwanie na pustynnej trasie, gdzie gorący piasek i falujące wydmy stawiają rowerzystów w obliczu nieustannego zagrożenia, a zwycięzca Rowerowego Rajdu Płomiennej Pustyni to prawdziwy mistrz odporności i szybkości.",
+    "beginTime": "2024-01-08T12:20:00",
+    "startAddress": "Sample address 4",
+    "valueModifier": null,
+    "isActive": false,
+    "isFreeOrder": false
+  },
+  {
+    "id": 5,
+    "name": "Wielka Gala Błyskawicznych Bolidów",
+    "description": "Na tej prestiżowej gali bolidów rowerowych, elegancja spotyka się z prędkością. Rowerzyści prezentują swoje umiejętności na eleganckiej trasie, zdobywając uznanie nie tylko za szybkość, ale także za styl i klasę podczas Wielkiej Gali Błyskawicznych Bolidów Rowerowych.",
+    "beginTime": "2023-01-18T14:30:00",
+    "startAddress": "Sample address 5",
+    "valueModifier": 3.20,
+    "isActive": false,
+    "isFreeOrder": false
+  }
+]

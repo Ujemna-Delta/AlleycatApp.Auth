@@ -5,6 +5,7 @@ using AlleycatApp.Auth.Infrastructure.Configuration;
 using AlleycatApp.Auth.Services.Account;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -14,6 +15,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), opts => opts.EnableRetryOnFailure()));
+
+builder.Services.AddSpaStaticFiles(configuration =>
+{
+    configuration.RootPath = "/";
+});
 
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddCors();
@@ -75,6 +81,9 @@ using (var scope = app.Services.CreateScope())
     if (appConfig.SeedData)
         await DataFactory.SeedSampleData(serviceProvider);
 }
+
+app.UseSpaStaticFiles();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
