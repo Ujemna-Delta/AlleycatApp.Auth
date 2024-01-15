@@ -17,7 +17,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
 
             // Act
 
-            var result = await controller.Index() as OkObjectResult;
+            var result = await controller.Test() as OkObjectResult;
 
             // Assert
 

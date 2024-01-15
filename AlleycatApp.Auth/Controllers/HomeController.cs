@@ -5,7 +5,12 @@ namespace AlleycatApp.Auth.Controllers
 {
     public class HomeController(IUserDataProvider userDataProvider) : Controller
     {
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return File("~/index.html", "text/html");
+        }
+
+        public async Task<IActionResult> Test()
         {
             var result = "Hello world!";
 
