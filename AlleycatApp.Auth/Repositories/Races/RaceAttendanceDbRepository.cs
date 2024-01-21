@@ -9,6 +9,8 @@ namespace AlleycatApp.Auth.Repositories.Races
     {
         public override IQueryable<RaceAttendance> Entities => context.RaceAttendances;
 
+        public async Task<IEnumerable<RaceAttendance>> GetAttendancesForRaceAsync(int raceId) =>
+            await Entities.Where(r => r.RaceId == raceId).ToArrayAsync();
         public async Task<RaceAttendance?> GetByUserAndRaceIdAsync(string userId, int raceId) =>
             await Entities.SingleOrDefaultAsync(r => r.AttendeeId == userId && r.RaceId == raceId);
 

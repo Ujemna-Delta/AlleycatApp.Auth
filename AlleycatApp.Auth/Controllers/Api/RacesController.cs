@@ -1,7 +1,10 @@
 ﻿using AlleycatApp.Auth.Infrastructure.Exceptions;
 using AlleycatApp.Auth.Models;
 using AlleycatApp.Auth.Models.Dto;
+using AlleycatApp.Auth.Models.Dto.User;
+using AlleycatApp.Auth.Models.Users;
 using AlleycatApp.Auth.Repositories.Races;
+using AlleycatApp.Auth.Repositories.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +13,7 @@ namespace AlleycatApp.Auth.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RacesController(IRaceRepository raceRepository, IRaceAttendanceRepository raceAttendanceRepository, IMapper mapper) : ControllerBase
+    public class RacesController(IRaceRepository raceRepository, IRaceAttendanceRepository raceAttendanceRepository, IMapper mapper, IUserRepository userRepository) : ControllerBase
     {
         [HttpGet] 
         public IActionResult GetRaces() => Ok(raceRepository.Entities.Select(e => mapper.Map<RaceDto>(e)).ToArray());
@@ -80,6 +83,18 @@ namespace AlleycatApp.Auth.Controllers.Api
             var attendance = await raceAttendanceRepository.FindByIdAsync(id);
             return attendance != null ? Ok(mapper.Map<RaceAttendanceDto>(attendance)) : NotFound();
         }
+
+        [HttpGet("attendances/race/{id}")]
+        public async Task<IActionResult> GetAttendeesForRace(int id)
+        {
+            var attendeeIds = (await raceAttendanceRepository.GetAttendancesForRaceAsync(id)).Select(r => r.AttendeeId);
+            var users = attendeeIds.Select(a => mapper.Map<AttendeeDto>(userRepository.FindByIdAsync<Attendee>(a).Result));
+            return Ok(users);
+        }
+
+        [HttpGet("attendances/race/count/{id}")]
+        public async Task<IActionResult> GetAttendancesCountForRace(int id) =>
+            Ok((await raceAttendanceRepository.GetAttendancesForRaceAsync(id)).Count().ToString());
 
         [HttpGet("attendances/{raceId}/{userId}")]
         public async Task<IActionResult> GetAttendanceByRaceAndUserId(int raceId, string userId)
