@@ -35,7 +35,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<RaceDto>(races[0])).Returns(raceDto);
 
-            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object);
+            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object, null!);
 
             // Act
 
@@ -82,7 +82,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
             var mapperMock = new Mock<IMapper>();
             mapperMock.Setup(m => m.Map<RaceDto>(races[1])).Returns(raceDto);
 
-            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object);
+            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object, null!);
 
             // Act
 
@@ -130,7 +130,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
             mapperMock.Setup(m => m.Map<Race>(raceDto)).Returns(expectedRace);
             mapperMock.Setup(m => m.Map<Race>(invalidRaceDto)).Returns(invalidRace);
 
-            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object);
+            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object, null!);
 
             // Act
 
@@ -191,7 +191,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
             mapperMock.Setup(m => m.Map<Race>(raceDto)).Returns(race);
             mapperMock.Setup(m => m.Map<Race>(invalidRaceDto)).Returns(invalidRace);
 
-            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object);
+            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object, null!);
 
             // Act
 
@@ -237,7 +237,7 @@ namespace AlleycatApp.Auth.Tests.Controllers
 
             var repositoryMock = Helpers.CreateRaceRepositoryMock(races);
             var mapperMock = new Mock<IMapper>();
-            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object);
+            var controller = new RacesController(repositoryMock.Object, null!, mapperMock.Object, null!);
 
             // Act
 
